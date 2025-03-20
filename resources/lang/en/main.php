@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'admin' => 'Admin',
+    'portal' => 'Portal',
+    'email' => 'Email',
+    'password' => 'Password',
+    'enter' => 'Enter',
+    'your' => 'Your',
+    'package' => 'Package',
+    'price' => 'Price',
+    'calculator' => 'Calculator',
+    'sign_in' => 'Sign In',
+    'dashboard' => 'Dashboard',
+    'login' => 'Login',
+    'business' => 'Business',
+    'type' => 'Type',
+    'select' => 'Select',
+    'inventory' => 'Inventory',
+    'platform' => 'Platform',
+    'impressions' => 'Impressions',
+    'views' => 'Views',
+    'clicks' => 'Clicks',
+    'video_views' => 'Video Views',
+    'calls' => 'Calls',
+];
