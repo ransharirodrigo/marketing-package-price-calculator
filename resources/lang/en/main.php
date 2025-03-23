@@ -23,4 +23,16 @@ return [
     'clicks' => 'Clicks',
     'video_views' => 'Video Views',
     'calls' => 'Calls',
+    'metrics' => 'Metrics',
+    'management' => 'Management',
+    'add' => 'Add',
+    'no' => 'No',
+    'id' => 'ID',
+    'action' => 'Action',
+    'add_business' => 'Add Business',
+    'business_name' => 'Business Name',
+    'enter_business_name' => 'Enter Business Name',
+    'save' => 'Save',
+    'close' => 'Close',
+    'add_price_metrics' => 'Add Price Metrics'
 ];

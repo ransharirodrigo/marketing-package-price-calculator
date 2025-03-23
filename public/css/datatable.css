@@ -1,0 +1,88 @@
+.dataTables_wrapper .dataTables_filter input {
+    padding: 8px 15px;
+    border: 1px solid var(--border-grey);
+    border-radius: 6px;
+    background-color: var(--light-grey);
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(255, 95, 109, 0.1);
+    background-color: var(--white);
+}
+
+.dataTables_wrapper .dataTables_filter label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dark-grey);
+    font-weight: 500;
+    font-size: 0.98rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    padding: 8px 15px;
+    border: 1px solid var(--border-grey);
+    border-radius: 6px;
+    background-color: var(--light-grey);
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_length select:focus {
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(255, 95, 109, 0.1);
+    background-color: var(--white);
+}
+
+.dataTables_wrapper .dataTables_length label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dark-grey);
+    font-weight: 500;
+    font-size: 0.98rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 5px 10px;
+    margin: 0 3px;
+    border: 1px solid var(--coral);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color:  var(--coral) !important;
+    color: white;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.dataTables_wrapper .dataTables_info {
+    font-size: 14px;
+}
+
+.dataTables_wrapper .dataTable {
+    border-collapse: collapse; 
+    width: 100%;
+}
+
+
+.dataTables_wrapper .dataTable th,
+.dataTables_wrapper .dataTable td {
+    border: 1px solid var(--border-grey); 
+    padding: 8px 15px; 
+}
+
+
+.dataTables_wrapper .dataTable thead th {
+    background-color: var(--coral);
+    font-weight: bold;
+    color: white;
+}
