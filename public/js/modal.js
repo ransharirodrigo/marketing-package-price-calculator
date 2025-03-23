@@ -60,4 +60,28 @@ $("#closePriceMetricsModal").on("click", function () {
 
 $("#savePriceMetrics").on("click", function (event) {
     event.preventDefault();
+
+    $.ajax({
+        url: 'save-new-price-metrics',
+        type: 'POST',
+        data: $('#addPriceMetricsForm').serialize(),
+        success: function (response) {
+
+            if (response.error) {
+                toastr.error(response.message, "Error");
+            } else {
+                toastr.success(response.message, "Success");
+                modalClose(addPriceMetricsModal);
+                // window.businessTypeTable.ajax.reload(null, false);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                toastr.error(jqXHR.responseJSON.message, "Error");
+            } else {
+                toastr.error("An unexpected error occurred.", "Error");
+            }
+        }
+
+    });
 });

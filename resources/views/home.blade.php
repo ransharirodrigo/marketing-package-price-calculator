@@ -75,10 +75,45 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title" id="addBusinessModalLabel">{{ __('main.add_business') }}</h5>
+                <h5 class="modal-title" id="addBusinessModalLabel">{{ __('main.add')." ".__('main.price')." ".__('main.metrics') }}</h5>
             </div>
             <div class="modal-body">
-               
+                <form id="addPriceMetricsForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="businessId">{{ __('main.business') }}</label>
+                        <select class="form-control common-form-control" id="businessId" name="businessId">
+                            <option value="">{{ __('main.select')." ".__('main.business') }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="dataType">{{ __('main.inventory') }}</label>
+                        <select class="form-control common-form-control" id="dataType" name="dataType">
+                            <option value="">{{ __('main.select') ." ".__('main.inventory')   }}</option>
+                            >
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="impression">{{ __('main.impressions') }}</label>
+                        <input type="text" class="form-control common-form-control" id="impression" name="impression" placeholder="{{ __('main.impressions')." ".__('main.price') }}">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="views">{{ __('main.views') }}</label>
+                        <input type="text" class="form-control common-form-control" id="views" name="views" placeholder="{{ __('main.views')." ".__('main.price') }}">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="click">{{ __('main.clicks') }}</label>
+                        <input type="text" class="form-control common-form-control" id="click" name="click" placeholder="{{ __('main.clicks')." ".__('main.price') }}">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="video_views">{{ __('main.video_views') }}</label>
+                        <input type="text" class="form-control common-form-control" id="video_views" name="video_views" placeholder="{{ __('main.video_views')." ".__('main.price') }}">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="calls">{{ __('main.calls') }}</label>
+                        <input type="text" class="form-control common-form-control" id="calls" name="calls" placeholder="{{ __('main.calls')." ".__('main.price') }}">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn common-coral-btn-bordered-small" id="closePriceMetricsModal" data-dismiss="modal">{{ __('main.close') }}</button>
