@@ -3,6 +3,12 @@ $('#addBusinessModal').on('hidden.bs.modal', function (e) {
     $(this).remove();
 });
 
+$('#addPriceMetricsModal').on('hidden.bs.modal', function (e) {
+    $('#business_id').val('');
+    $('#inventory_id').val('');
+    $('#addPriceMetricsForm').find('input').val('');
+});
+
 function modalClose(modal) {
     modal.modal("hide");
 }
@@ -76,6 +82,7 @@ $("#savePriceMetrics").on("click", function (event) {
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR)
             if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                 toastr.error(jqXHR.responseJSON.message, "Error");
             } else {

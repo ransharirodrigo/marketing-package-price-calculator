@@ -82,37 +82,26 @@
                     @csrf
                     <div class="form-group">
                         <label for="businessId">{{ __('main.business') }}</label>
-                        <select class="form-control common-form-control" id="businessId" name="businessId">
+                        <select class="form-control common-form-control" id="business_id" name="business_id">
                             <option value="">{{ __('main.select')." ".__('main.business') }}</option>
+                            @foreach($businesses_for_price_updates as $business)
+                            <option value="{{ $business->id }}">{{ $business->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="dataType">{{ __('main.inventory') }}</label>
-                        <select class="form-control common-form-control" id="dataType" name="dataType">
+                        <label>{{ __('main.inventory') }}</label>
+                        <select class="form-control common-form-control" id="inventory_id" name="inventory_id">
                             <option value="">{{ __('main.select') ." ".__('main.inventory')   }}</option>
-                            >
+
                         </select>
                     </div>
+                    @foreach ($metrics as $metric)
                     <div class="form-group mt-3">
-                        <label for="impression">{{ __('main.impressions') }}</label>
-                        <input type="text" class="form-control common-form-control" id="impression" name="impression" placeholder="{{ __('main.impressions')." ".__('main.price') }}">
+                        <label>{{ $metric->name }}</label>
+                        <input type="text" class="form-control common-form-control" id="{{ $metric->name }}" name="{{ $metric->name }}" placeholder="{{ $metric->name." ".__('main.price') }}" oninput="validateDoubleValues(this)">
                     </div>
-                    <div class="form-group mt-3">
-                        <label for="views">{{ __('main.views') }}</label>
-                        <input type="text" class="form-control common-form-control" id="views" name="views" placeholder="{{ __('main.views')." ".__('main.price') }}">
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="click">{{ __('main.clicks') }}</label>
-                        <input type="text" class="form-control common-form-control" id="click" name="click" placeholder="{{ __('main.clicks')." ".__('main.price') }}">
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="video_views">{{ __('main.video_views') }}</label>
-                        <input type="text" class="form-control common-form-control" id="video_views" name="video_views" placeholder="{{ __('main.video_views')." ".__('main.price') }}">
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="calls">{{ __('main.calls') }}</label>
-                        <input type="text" class="form-control common-form-control" id="calls" name="calls" placeholder="{{ __('main.calls')." ".__('main.price') }}">
-                    </div>
+                    @endforeach
                 </form>
             </div>
             <div class="modal-footer">

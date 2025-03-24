@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Business extends Model
+class BusinessInventoryMetricsPrices extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
 
-    protected $table = 'business';
+    protected $table = "business_inventory_metric_prices";
 }

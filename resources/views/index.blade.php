@@ -41,86 +41,34 @@
                             <div class="mb-4">
                                 <label for="businessType" class="common-form-label">{{ __("main.business")." ".__("main.type") }}</label>
                                 <select id="businessType" class="form-select common-form-control">
-
+                                    @foreach($business as $businessItem)
+                                    <option value="{{ $businessItem->id }}">{{ $businessItem->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
                             <div class="mb-4">
                                 <label class="common-form-label">{{ __("main.select")." ".__("main.inventory")." ".__("main.platform") }}</label>
                                 <div>
+                                    @foreach($inventory as $inventoryItem)
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="facebook" value="Facebook">
-                                        <label class="common-text" for="facebook">Facebook</label>
+                                        <input class="form-check-input" type="checkbox" id="{{ $inventoryItem->id }}" value="{{ $inventoryItem->name }}">
+                                        <label class="common-text">{{ $inventoryItem->name }}</label>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="youtube" value="Youtube">
-                                        <label class="common-text" for="youtube">Youtube</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="tiktok" value="TikTok">
-                                        <label class="common-text" for="tiktok">TikTok</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="instagram" value="Insta">
-                                        <label class="common-text" for="instagram">Instagram</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="twitter" value="Twitter">
-                                        <label class="common-text" for="twitter">Twitter</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="webPagesTamil" value="Web Pages-Tamil">
-                                        <label class="common-text" for="webPagesTamil">Web Pages-Tamil</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="webPagesSinhala" value="Web Pages-Sinhala">
-                                        <label class="common-text" for="webPagesSinhala">Web Pages-Sinhala</label>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-3">
+                                @foreach($metrics as $metric)
                                 <div class="col-md-6 mb-3">
-                                    <label for="impressions" class="common-form-label">{{ __("main.impressions") }}</label>
+                                    <label class="common-form-label">{{ $metric->name }}</label>
                                     <div class="input-group">
-                                        <span class="input-group-text common-gradient"><i class="fas fa-eye text-white"></i></span>
-                                        <input type="number" id="impressions" class="form-control  common-form-control" placeholder="Count" min="0">
+                                        <span class="input-group-text common-gradient"><i class="fas fa-{{ $metric->icon }} text-white"></i></span>
+                                        <input type="number" id="{{ $metric->id }}" class="form-control  common-form-control" placeholder="{{ $metric->name }} Count" min="0">
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="views" class="common-form-label">{{ __("main.views") }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text common-gradient"><i class="fas fa-tv text-white"></i></span>
-                                        <input type="number" id="views" class="form-control  common-form-control" placeholder="Count" min="0">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="clicks" class="common-form-label">{{ __("main.clicks") }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text common-gradient "><i class="fas fa-mouse-pointer text-white"></i></span>
-                                        <input type="number" id="clicks" class="form-control  common-form-control" placeholder="Count" min="0">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="videoViews" class="common-form-label">{{ __("main.video_views") }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text common-gradient"><i class="fas fa-video text-white"></i></span>
-                                        <input type="number" id="videoViews" class="form-control  common-form-control" placeholder="Count" min="0">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label for="calls" class="common-form-label">{{ __("main.calls") }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text common-gradient"><i class="fas fa-phone text-white"></i></span>
-                                        <input type="number" id="calls" class="form-control  common-form-control" placeholder="Count" min="0">
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                             <div class="calculator-actions d-flex mb-4">
