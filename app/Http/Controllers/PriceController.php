@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Metrics;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -83,13 +84,93 @@ class PriceController extends Controller
                 'message' => 'Price metrics saved successfully.'
             ];
             return response()->json($response);
-            
         } catch (\Exception $e) {
             $response = [
                 'error' => true,
                 'message' => 'Error saving price metrics.'
             ];
             return response()->json($response, 500);
+        }
+    }
+
+    public function show()
+    {
+
+        $prices = BusinessInventoryMetricsPrices::with(['business', 'inventory', 'metrics'])->get();
+        $data = [];
+
+        $index = 1;
+
+        foreach ($prices as $price) {
+            $data[] = [
+                'no' => $index,
+                'business' => $price->business->name,
+                'inventory' => $price->inventory->name,
+                'metric' => $price->metrics->name,
+                'price' => $price->price,
+                "action" => "<i class='fas fa-edit price-metrics-edit-btn' data-id='" . $price->id . "' data-url='business-inventory-metric-prices/" . $price->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $price->id . "' style='cursor: pointer; margin-left: 10px;'></i>"
+            ];
+            $index++;
+        }
+        return response()->json($data);
+    }
+
+    public function edit(int $id)
+    {
+        $price = BusinessInventoryMetricsPrices::with(['business', 'inventory', 'metrics'])->find($id);
+
+        if (!$price) {
+            return response()->json(['error' => 'Price data not found'], 404);
+        }
+        return response()->json([
+            'id' => $price->id,
+            'business_id' => $price->business_id,
+            'inventory_id' => $price->inventory_id,
+            'metrics_id' => $price->metrics_id,
+            'price' => $price->price,
+            'business' => [
+                'name' => $price->business->name,
+            ],
+            'inventory' => [
+                'name' => $price->inventory->name,
+            ],
+            'metrics' => [
+                'name' => $price->metrics->name,
+            ],
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:business_inventory_metric_prices,id',
+            'price' => 'required|numeric',
+        ], [
+            'id.required' => 'ID is required.',
+            'price.required' => 'Price is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'message' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $price_row = BusinessInventoryMetricsPrices::find($request->id);
+
+            if (!$price_row) {
+                return response()->json(['error' => true, 'message' => 'Price data not found'], 404);
+            }
+
+            $price_row->price = $request->price;
+            $price_row->save();
+
+            return response()->json(['error' => false, 'message' => 'Price updated successfully']);
+        } catch (Exception $e) {
+            Log::info($e);
         }
     }
 }

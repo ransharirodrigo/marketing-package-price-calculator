@@ -42,6 +42,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row px-3 mt-5">
+                        <table id="price_metric_table" data-url="{{ url("price-list") }}" class="table table-bordered table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{__("main.no")}}</th>
+                                    <th scope="col">{{__("main.business")}}</th>
+                                    <th scope="col">{{__("main.inventory")}}</th>
+                                    <th scope="col">{{__("main.metric")}}</th>
+                                    <th scope="col">{{__("main.price")}}</th>
+                                    <th scope="col">{{__("main.action")}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -111,6 +127,51 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="updatePriceModal" tabindex="-1" aria-labelledby="updatePriceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update Price</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updatePriceForm">
+                    @csrf
+                    <input type="hidden" name="id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Business:</label>
+                        <b><label id="business_label"></label></b>
+                        <input type="hidden" name="business_id" id="business_id">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Inventory:</label>
+                        <p id="inventory_label"></p>
+                        <input type="hidden" name="inventory_id" id="inventory_id">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Metric:</label>
+                        <p id="metrics_label"></p>
+                        <input type="hidden" name="metrics_id" id="metrics_id">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="" name="price" class="form-control" oninput="validateDoubleValues(this)">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="update_price_metrics">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -122,6 +183,14 @@
     const businessListUrl = "{{ url('business-list') }}";
     $(document).ready(function() {
         loadBusinessTypeTableData();
+    });
+</script>
+
+<!-- PRICE METRIC TABLE DATA LOAD -->
+<script>
+    const priceListUrl = "{{ url('price-list') }}";
+    $(document).ready(function() {
+        loadPriceMetricsTable();
     });
 </script>
 

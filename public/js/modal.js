@@ -78,7 +78,7 @@ $("#savePriceMetrics").on("click", function (event) {
             } else {
                 toastr.success(response.message, "Success");
                 modalClose(addPriceMetricsModal);
-                // window.businessTypeTable.ajax.reload(null, false);
+                window.pricetable.ajax.reload(null, false);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -90,5 +90,52 @@ $("#savePriceMetrics").on("click", function (event) {
             }
         }
 
+    });
+});
+
+$(document).on('click', '.price-metrics-edit-btn', function () {
+
+    let id = $(this).data('id');
+    let url = $(this).data('url');
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (response) {
+            $('#updatePriceModal input[name="id"]').val(response.id);
+            $('#business_label').text(response.business.name);
+            $('#inventory_label').text(response.inventory.name);
+            $('#metrics_label').text(response.metrics.name);
+            $('#business_id').val(response.business_id);
+            $('#inventory_id').val(response.inventory_id);
+            $('#metrics_id').val(response.metrics_id);
+            $('#updatePriceModal input[name="price"]').val(response.price);
+
+            $('#updatePriceModal').modal('show');
+        },
+        error: function (error) {
+            console.error('Error fetching data for edit:', error);
+            alert('Error fetching edit data.');
+        }
+    });
+});
+
+$(document).on('click', '#update_price_metrics', function () {
+
+    let formData = $('#updatePriceForm').serialize();
+    let url = 'business-inventory-metric-prices-update';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            $('#updatePriceModal').modal('hide');
+            window.pricetable.ajax.reload(null, false);
+        },
+        error: function (error) {
+            console.error('Error updating price:', error);
+            alert('Error updating price.');
+        }
     });
 });

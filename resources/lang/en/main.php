@@ -24,6 +24,7 @@ return [
     'video_views' => 'Video Views',
     'calls' => 'Calls',
     'metrics' => 'Metrics',
+    'metric' => 'Metric',
     'management' => 'Management',
     'add' => 'Add',
     'no' => 'No',
