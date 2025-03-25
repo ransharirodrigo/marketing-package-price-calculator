@@ -148,13 +148,13 @@
 
                     <div class="mb-3">
                         <label class="form-label">Inventory:</label>
-                        <p id="inventory_label"></p>
+                        <b><label id="inventory_label"></label></b>
                         <input type="hidden" name="inventory_id" id="inventory_id">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Metric:</label>
-                        <p id="metrics_label"></p>
+                        <b><label id="metrics_label"></label></b>
                         <input type="hidden" name="metrics_id" id="metrics_id">
                     </div>
 

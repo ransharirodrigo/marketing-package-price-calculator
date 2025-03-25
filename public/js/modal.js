@@ -86,6 +86,7 @@ $(document).on('click', '#updateBusinessSubmit', function () {
         },
         success: function (response) {
             $('#updateBusinessModal').modal('hide');
+            toastr.success(response.message, "Success");
             window.businessTypeTable.ajax.reload(null, false);
         },
         error: function (error) {
@@ -174,6 +175,7 @@ $(document).on('click', '#update_price_metrics', function () {
         data: formData,
         success: function (response) {
             $('#updatePriceModal').modal('hide');
+            toastr.success(response.message, "Success");
             window.pricetable.ajax.reload(null, false);
         },
         error: function (error) {
