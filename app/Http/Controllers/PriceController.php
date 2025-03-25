@@ -108,7 +108,7 @@ class PriceController extends Controller
                 'inventory' => $price->inventory->name,
                 'metric' => $price->metrics->name,
                 'price' => $price->price,
-                "action" => "<i class='fas fa-edit price-metrics-edit-btn' data-id='" . $price->id . "' data-url='business-inventory-metric-prices/" . $price->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $price->id . "' style='cursor: pointer; margin-left: 10px;'></i>"
+                "action" => "<i class='fas fa-edit price-metrics-edit-btn' data-id='" . $price->id . "' data-url='business-inventory-metric-prices/" . $price->id . "/edit' style='cursor: pointer;'></i>"
             ];
             $index++;
         }
