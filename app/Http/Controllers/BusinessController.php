@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,7 @@ class BusinessController extends Controller
             $data[] = [
                 'no' => $index,
                 'business' => $business->name,
-                "action" => "<i class='fas fa-edit edit-btn' data-id='" . $business->id . "' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' style='cursor: pointer; margin-left: 10px;'></i>"
+                "action" => "<i class='fas fa-edit edit-business-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' style='cursor: pointer; margin-left: 10px;'></i>"
             ];
             $index++;
         }
@@ -67,6 +68,42 @@ class BusinessController extends Controller
             ];
 
             return response()->json($response, 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        $business = Business::find($id);
+
+        if (!$business) {
+            return response()->json(['error' => 'Business not found'], 404);
+        }
+
+        return response()->json($business);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $business = Business::find($id);
+
+            if (!$business) {
+                return response()->json(['error' => 'Business not found'], 404);
+            }
+
+            $business->name = $request->name;
+            $business->save();
+
+            return response()->json(['message' => 'Business name updated successfully']);
+        } catch (Exception $e) {
         }
     }
 }

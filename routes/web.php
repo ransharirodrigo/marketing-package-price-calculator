@@ -35,3 +35,5 @@ Route::post("save-new-price-metrics",[PriceController::class,"saveMetricsPrice"]
 Route::get("price-list", [PriceController::class, "show"])->name("price.list");
 Route::get('business-inventory-metric-prices/{id}/edit', [PriceController::class, 'edit']);
 Route::post('business-inventory-metric-prices-update', [PriceController::class, 'update']);
+Route::get('/businesses/{id}/edit', [BusinessController::class, 'edit']);
+Route::put('/businesses/{id}', [BusinessController::class, 'update']);

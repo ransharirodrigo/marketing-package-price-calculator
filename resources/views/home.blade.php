@@ -165,8 +165,35 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="update_price_metrics">Save changes</button>
+                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-gradient-btn-small" id="update_price_metrics">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateBusinessModal" tabindex="-1" aria-labelledby="updateBusinessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateBusinessModalLabel">Update Business Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateBusinessForm">
+                    @csrf
+                    <input type="hidden" name="id">
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Business Name</label>
+                        <input type="text" name="name" class="form-control">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-gradient-btn-small" id="updateBusinessSubmit">Save changes</button>
             </div>
         </div>
     </div>

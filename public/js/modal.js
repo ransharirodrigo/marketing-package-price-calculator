@@ -52,6 +52,49 @@ $("#saveBusiness").on("click", function (event) {
     });
 });
 
+$(document).on('click', '.edit-business-btn', function () {
+    let businessId = $(this).data('id');
+    let url = $(this).data('url');
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (response) {
+            $('#updateBusinessModal input[name="id"]').val(response.id);
+            $('#updateBusinessModal input[name="name"]').val(response.name);
+
+            $('#updateBusinessModal').modal('show');
+        },
+        error: function (error) {
+            console.error('Error fetching business data for edit:', error);
+            alert('Error fetching business edit data.');
+        }
+    });
+});
+
+$(document).on('click', '#updateBusinessSubmit', function () {
+    let formData = $('#updateBusinessForm').serialize();
+    let businessId = $('#updateBusinessModal input[name="id"]').val();
+    let url = '/businesses/' + businessId;
+
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        data: formData,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            $('#updateBusinessModal').modal('hide');
+            window.businessTypeTable.ajax.reload(null, false);
+        },
+        error: function (error) {
+            console.error('Error updating business data:', error);
+            alert('Error updating business data.');
+        }
+    });
+});
+
 
 // PRICE METRICS MODAL
 var addPriceMetricsModal = $('#addPriceMetricsModal');
