@@ -37,3 +37,7 @@ Route::get('business-inventory-metric-prices/{id}/edit', [PriceController::class
 Route::post('business-inventory-metric-prices-update', [PriceController::class, 'update']);
 Route::get('/businesses/{id}/edit', [BusinessController::class, 'edit']);
 Route::put('/businesses/{id}', [BusinessController::class, 'update']);
+
+Route::post('/calculate-price', [PriceController::class, 'calculatePrice']);
+
+// Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('generate.pdf');

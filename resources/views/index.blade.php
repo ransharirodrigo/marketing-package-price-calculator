@@ -37,55 +37,125 @@
                     </div>
 
                     <div class="col-lg-8">
-                        <div class="p-4 p-lg-5">
-                            <div class="mb-4">
-                                <label for="businessType" class="common-form-label">{{ __("main.business")." ".__("main.type") }}</label>
-                                <select id="businessType" class="form-select common-form-control">
-                                    @foreach($business as $businessItem)
-                                    <option value="{{ $businessItem->id }}">{{ $businessItem->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <form id="price-calculate-form" method="POST">
+                            @csrf
+                            <div class="p-4 p-lg-5">
+                                <div class="mb-4">
+                                    <label for="businessType" class="common-form-label">{{ __("main.business")." ".__("main.type") }}</label>
+                                    <select id="businessType" name="businessType" class="form-select common-form-control">
+                                        @foreach($business as $businessItem)
+                                        <option value="{{ $businessItem->id }}">{{ $businessItem->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                            <div class="mb-4">
-                                <label class="common-form-label">{{ __("main.select")." ".__("main.inventory")." ".__("main.platform") }}</label>
-                                <div>
-                                    @foreach($inventory as $inventoryItem)
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="{{ $inventoryItem->id }}" value="{{ $inventoryItem->name }}">
-                                        <label class="common-text">{{ $inventoryItem->name }}</label>
+                                <div class="mb-4">
+                                    <label class="common-form-label">{{ __("main.select")." ".__("main.inventory")." ".__("main.platform") }}</label>
+                                    <div>
+                                        @foreach($inventory as $inventoryItem)
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="{{ $inventoryItem->name }}" name="{{ $inventoryItem->name }}" value="{{ $inventoryItem->name }}">
+                                            <label class="common-text">{{ $inventoryItem->name }}</label>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    @foreach($metrics as $metric)
+                                    <div class="col-md-6 mb-3">
+                                        <label class="common-form-label">{{ $metric->name }}</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text common-gradient"><i class="fas fa-{{ $metric->icon }} text-white"></i></span>
+                                            <input type="number" id="{{ $metric->id }}" name="{{ $metric->id }}" class="form-control  common-form-control" placeholder="{{ $metric->name }} Count" min="0">
+                                        </div>
                                     </div>
                                     @endforeach
                                 </div>
-                            </div>
 
-                            <div class="row mb-3">
-                                @foreach($metrics as $metric)
-                                <div class="col-md-6 mb-3">
-                                    <label class="common-form-label">{{ $metric->name }}</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text common-gradient"><i class="fas fa-{{ $metric->icon }} text-white"></i></span>
-                                        <input type="number" id="{{ $metric->id }}" class="form-control  common-form-control" placeholder="{{ $metric->name }} Count" min="0">
-                                    </div>
+                                <div class="calculator-actions d-flex mb-4">
+                                    <button onclick="calculateTotal()" type="button" class="btn common-gradient-btn me-2 flex-grow-1">Calculate</button>
+                                    <button onclick="openDownloadModal()" type="button" class="btn common-coral-btn-bordered flex-grow-1">Download PDF</button>
                                 </div>
-                                @endforeach
-                            </div>
 
-                            <div class="calculator-actions d-flex mb-4">
-                                <button onclick="calculateTotal()" class="btn common-gradient-btn me-2 flex-grow-1">Calculate</button>
-                                <button onclick="generatePDF()" class="btn common-coral-btn-bordered flex-grow-1">Download PDF</button>
-                            </div>
+                                <div id="totalResult" class="mt-4">
 
-                            <!-- <div id="totalResult" class="mt-4">
-                                <p>
-                                    <strong>Rs 123000.00</strong>
-                                </p>
-                            </div> -->
-                        </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="downloadModalLabel">Download PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="clientName" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="Enter client name">
+                </div>
+                <div class="mb-3">
+                    <label for="clientAddress" class="form-label">Client Address</label>
+                    <textarea class="form-control" id="clientAddress" rows="3" placeholder="Enter client address"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="downloadPDF()">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section("script")
+<script>
+    function openDownloadModal() {
+        $('#downloadModal').modal('show');
+    }
+
+    // function downloadPDF() {
+    //     let clientName = $('#clientName').val();
+    //     let clientAddress = $('#clientAddress').val();
+    //     let totalResultHtml = $('#totalResult').html();
+
+    //     let formData = new FormData();
+    //     formData.append('clientName', clientName);
+    //     formData.append('clientAddress', clientAddress);
+    //     formData.append('totalResultHtml', totalResultHtml);
+    //     formData.append('_token', $('input[name="_token"]').val());
+
+    //     $.ajax({
+    //         url: "{{ route('generate.pdf') }}",
+    //         type: 'POST',
+    //         data: formData,
+    //         processData: false,
+    //         contentType: false, 
+    //         xhrFields: {
+    //             responseType: 'blob'
+    //         },
+    //         success: function(blob) {
+    //             let link = document.createElement('a');
+    //             link.href = window.URL.createObjectURL(blob);
+    //             link.download = 'price_calculation.pdf';
+    //             link.click();
+
+    //             $('#downloadModal').modal('hide');
+    //         },
+    //         error: function(error) {
+    //             console.error('Error generating PDF:', error);
+    //             alert('Error generating PDF.');
+    //         }
+    //     });
+    // }
+</script>
 @endsection

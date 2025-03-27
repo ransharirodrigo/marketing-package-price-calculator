@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
+use App\Models\Inventory;
 use App\Models\Metrics;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+
+use function Laravel\Prompts\error;
 
 class PriceController extends Controller
 {
@@ -172,5 +176,143 @@ class PriceController extends Controller
         } catch (Exception $e) {
             Log::info($e);
         }
+    }
+
+    public function calculatePrice(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'businessType' => 'required|exists:business,id',
+            '1' => 'nullable|numeric',
+            '2' => 'nullable|numeric',
+            '3' => 'nullable|numeric',
+            '4' => 'nullable|numeric',
+            '5' => 'nullable|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "error" => true,
+                "message" => $validator->errors()
+            ];
+
+            return response()->json($response);
+        }
+
+        $businessTypeId = $request->input('businessType');
+        $inventoryKeysToCheck = [
+            'Facebook',
+            'Youtube',
+            'Tiktok',
+            'Instagram',
+            'Twitter',
+            'Web_Pages-Tamil',
+            'Web_Pages-Sinhala',
+        ];
+        $metricValues = $request->only(['1', '2', '3', '4', '5']);
+
+        $business = Business::find($businessTypeId);
+
+        if (!$business) {
+            $response = [
+                "error" => true,
+                "message" => "Business not found."
+            ];
+            return response()->json($response);
+        }
+
+        $checkedInventoryKeys = [];
+
+        foreach ($inventoryKeysToCheck as $key) {
+            if ($request->has($key)) {
+                $checkedInventoryKeys[] = $key;
+            }
+        }
+
+        $checkedInventoryIds = [];
+
+        foreach ($checkedInventoryKeys as $key) {
+            if ($key === 'Web_Pages-Tamil') {
+                $key[] = 'Web Pages-Tamil';
+            } elseif ($key === 'Web_Pages-Sinhala') {
+                $key[] = 'Web Pages-Sinhala';
+            }
+
+            $inventory = Inventory::where("name", $key)->first();
+            if ($inventory) {
+                $checkedInventoryIds[] = $inventory->id;
+            }
+        }
+
+        $result = $this->calculateTotalPriceWithDetails($businessTypeId, $checkedInventoryIds, $metricValues);
+        Log::info(json_encode($result, JSON_PRETTY_PRINT));
+        $response = [
+            "error" => false,
+            "data" => $result
+        ];
+        return response()->json($response);
+    }
+
+    private function calculateTotalPriceWithDetails(int $businessId, array $inventoryIds, array $metricValues): array
+    {
+        $totalPrice = 0;
+        $missingPrices = [];
+        $priceDetails = [];
+
+        foreach ($inventoryIds as $inventoryId) {
+            foreach ($metricValues as $metricId => $value) {
+                if ($value !== null) {
+                    $priceRow = BusinessInventoryMetricsPrices::where('business_id', $businessId)
+                        ->where('inventory_id', $inventoryId)
+                        ->where('metrics_id', $metricId)
+                        ->with(['business', 'inventory', 'metrics'])
+                        ->first();
+
+                    if ($priceRow) {
+                        $price = $priceRow->price;
+                        $subtotal = $price * $value;
+                        $totalPrice += $subtotal;
+
+                        $priceDetails[] = [
+                            'inventory_name' => $priceRow->inventory->name,
+                            'metrics_name' => $priceRow->metrics->name,
+                            'price' => $price,
+                            'value' => $value,
+                            'subtotal' => $subtotal,
+                        ];
+                    } else {
+
+                        $inventoryName = Inventory::find($inventoryId)->name;
+                        $metricsName = Metrics::find($metricId)->name;
+
+                        $missingPrices[] = [
+                            'inventory_name' => $inventoryName,
+                            'metrics_name' => $metricsName,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return [
+            'total_price' => $totalPrice,
+            'missing_prices' => $missingPrices,
+            'price_details' => $priceDetails,
+        ];
+    }
+
+    public function generatePdf(Request $request){
+        $clientName = $request->input('clientName');
+        $clientAddress = $request->input('clientAddress');
+        $totalResultHtml = $request->input('totalResultHtml');
+
+        $data = [
+            'clientName' => $clientName,
+            'clientAddress' => $clientAddress,
+            'totalResultHtml' => $totalResultHtml,
+        ];
+
+        $pdf = PDF::loadView('pdf.price_calculation', $data);
+
+        return $pdf->download('price_calculation.pdf');
     }
 }

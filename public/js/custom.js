@@ -29,6 +29,57 @@ function validateDoubleValues(input) {
     return true;
 }
 
+function calculateTotal() {
+    let formData = $('#price-calculate-form').serialize();
+    console.log("Form Data:", formData);
+
+    $.ajax({
+        url: "/calculate-price",
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.error) {
+                toastr.error(response.message, "Error");
+                return;
+            } else {
+                let result = response.data;
+                let totalPrice = result.total_price;
+                let missingPrices = result.missing_prices;
+                let priceDetails = result.price_details;
+
+                let resultHtml = '<h5>Calculated Prices</h5>';
+                if (priceDetails.length > 0) {
+                    resultHtml += '<ul>';
+                    priceDetails.forEach(detail => {
+                        resultHtml += `<li>${detail.inventory_name} - ${detail.metrics_name}: ${detail.price} x ${detail.value} = ${detail.subtotal}</li>`;
+                    });
+                    resultHtml += '</ul>';
+                    resultHtml += `<h3><strong>Total: ${totalPrice}</strong></h3>`;
+                } else {
+                    resultHtml += '<p>No prices calculated.</p>';
+                }
+
+                resultHtml += '<h5>Missing Prices</h5>';
+                if (missingPrices.length > 0) {
+                    resultHtml += '<ul>';
+                    missingPrices.forEach(missing => {
+                        resultHtml += `<li>${missing.inventory_name} - ${missing.metrics_name}</li>`;
+                    });
+                    resultHtml += '</ul>';
+                } else {
+                    resultHtml += '<p>No missing prices.</p>';
+                }
+
+                $('#totalResult').html(resultHtml);
+            }
+        },
+        error: function (error) {
+            console.error('Error updating price:', error);
+            alert('Error updating price.');
+        }
+    });
+}
+
 //BUSINESS SELECT - LOAD APPROPRIATE INVENTORIES TO THE RELATED BUSINESS
 $("#business_id").on("change", function () {
     const selected_value = $(this).val();
