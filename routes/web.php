@@ -40,4 +40,4 @@ Route::put('/businesses/{id}', [BusinessController::class, 'update']);
 
 Route::post('/calculate-price', [PriceController::class, 'calculatePrice']);
 
-// Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('generate.pdf');
+Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('generate.pdf');

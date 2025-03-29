@@ -3,20 +3,74 @@
 <head>
     <title>Price Calculation</title>
     <style>
-        body { font-family: sans-serif; }
-        h1, h2, h3, h4, h5, h6 { margin-bottom: 0.5em; }
-        p { margin-bottom: 1em; }
-        ul { margin-bottom: 1em; }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #343A40; /* Dark gray for text */
+        }
+        .header {
+            background-color: #FF5F6D; /* Red header */
+            color: white;
+            padding: 20px;
+            text-align: left;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content h2 {
+            color: #ff4b5a; /* Red for headings */
+            margin-bottom: 10px;
+        }
+        .content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .content li {
+            margin-bottom: 5px;
+        }
+        .content strong {
+            color: #2c3e50; /* Darker gray for emphasis */
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .content th, .content td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .content th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
-    <h1>Price Calculation</h1>
+    <div class="header">
+        <h1>THE BUSINESS SOLUTIONS</h1>
+        <p>ABC ROAD COLOMBO, Sri Lanka</p> 
+        <p>12345678</p>
+    </div>
 
-    <p><strong>Client Name:</strong> {{ $clientName }}</p>
-    <p><strong>Client Address:</strong> {{ $clientAddress }}</p>
+    <div class="content">
+        <h2>Price Calculation</h2>
 
-    <div id="result">
-        {!! $totalResultHtml !!}
+        <p><strong>Client Name:</strong> {{ $clientName }}</p>
+        <p><strong>Client Address:</strong> {{ $clientAddress }}</p>
+
+        <div id="result">
+            {!! $totalResultHtml !!} 
+        </div>
     </div>
 </body>
 </html>

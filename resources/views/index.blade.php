@@ -101,7 +101,7 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="clientName" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="clientName" placeholder="Enter client name">
+                    <input type="text" class="form-control" id="clientName" autocomplete="off" placeholder="Enter client name">
                 </div>
                 <div class="mb-3">
                     <label for="clientAddress" class="form-label">Client Address</label>
@@ -109,8 +109,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="downloadPDF()">Download</button>
+                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-gradient-btn-small" onclick="downloadPDF()">Download</button>
             </div>
         </div>
     </div>
@@ -123,39 +123,39 @@
         $('#downloadModal').modal('show');
     }
 
-    // function downloadPDF() {
-    //     let clientName = $('#clientName').val();
-    //     let clientAddress = $('#clientAddress').val();
-    //     let totalResultHtml = $('#totalResult').html();
+     function downloadPDF() {
+         let clientName = $('#clientName').val();
+         let clientAddress = $('#clientAddress').val();
+         let totalResultHtml = $('#totalResult').html();
 
-    //     let formData = new FormData();
-    //     formData.append('clientName', clientName);
-    //     formData.append('clientAddress', clientAddress);
-    //     formData.append('totalResultHtml', totalResultHtml);
-    //     formData.append('_token', $('input[name="_token"]').val());
+         let formData = new FormData();
+         formData.append('clientName', clientName);
+         formData.append('clientAddress', clientAddress);
+         formData.append('totalResultHtml', totalResultHtml);
+         formData.append('_token', $('input[name="_token"]').val());
 
-    //     $.ajax({
-    //         url: "{{ route('generate.pdf') }}",
-    //         type: 'POST',
-    //         data: formData,
-    //         processData: false,
-    //         contentType: false, 
-    //         xhrFields: {
-    //             responseType: 'blob'
-    //         },
-    //         success: function(blob) {
-    //             let link = document.createElement('a');
-    //             link.href = window.URL.createObjectURL(blob);
-    //             link.download = 'price_calculation.pdf';
-    //             link.click();
+         $.ajax({
+             url: "{{ route('generate.pdf') }}",
+             type: 'POST',
+             data: formData,
+             processData: false,
+             contentType: false, 
+             xhrFields: {
+                 responseType: 'blob'
+             },
+             success: function(blob) {
+                 let link = document.createElement('a');
+                 link.href = window.URL.createObjectURL(blob);
+                 link.download = 'price_calculation.pdf';
+                 link.click();
 
-    //             $('#downloadModal').modal('hide');
-    //         },
-    //         error: function(error) {
-    //             console.error('Error generating PDF:', error);
-    //             alert('Error generating PDF.');
-    //         }
-    //     });
-    // }
+                 $('#downloadModal').modal('hide');
+             },
+             error: function(error) {
+                 console.error('Error generating PDF:', error);
+                 alert('Error generating PDF.');
+             }
+         });
+     }
 </script>
 @endsection

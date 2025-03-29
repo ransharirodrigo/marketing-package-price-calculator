@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Inventory;
 use App\Models\Metrics;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -300,11 +301,12 @@ class PriceController extends Controller
         ];
     }
 
-    public function generatePdf(Request $request){
+    public function generatePdf(Request $request)
+    {
         $clientName = $request->input('clientName');
         $clientAddress = $request->input('clientAddress');
         $totalResultHtml = $request->input('totalResultHtml');
-
+        
         $data = [
             'clientName' => $clientName,
             'clientAddress' => $clientAddress,
