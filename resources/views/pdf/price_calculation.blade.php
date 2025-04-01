@@ -7,10 +7,10 @@
             font-family: sans-serif;
             margin: 0;
             padding: 0;
-            color: #343A40; /* Dark gray for text */
+            color: #343A40; 
         }
         .header {
-            background-color: #FF5F6D; /* Red header */
+            background-color: #FF5F6D; 
             color: white;
             padding: 20px;
             text-align: left;
@@ -27,7 +27,7 @@
             padding: 20px;
         }
         .content h2 {
-            color: #ff4b5a; /* Red for headings */
+            color: #ff4b5a;
             margin-bottom: 10px;
         }
         .content ul {
@@ -38,7 +38,7 @@
             margin-bottom: 5px;
         }
         .content strong {
-            color: #2c3e50; /* Darker gray for emphasis */
+            color: #2c3e50; 
         }
         .content table {
             width: 100%;

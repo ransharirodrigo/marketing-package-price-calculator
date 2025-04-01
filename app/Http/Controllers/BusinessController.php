@@ -102,7 +102,14 @@ class BusinessController extends Controller
             $business->name = $request->name;
             $business->save();
 
-            return response()->json(['message' => 'Business name updated successfully']);
+            $response=[
+                "error"=>false,
+                "message"=>"Business name updated successfully",
+                "id"=>$id,
+                "name"=>$request->name
+            ];
+
+            return response()->json( $response);
         } catch (Exception $e) {
         }
     }

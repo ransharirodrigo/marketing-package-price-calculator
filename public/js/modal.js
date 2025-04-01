@@ -9,6 +9,13 @@ $('#addPriceMetricsModal').on('hidden.bs.modal', function (e) {
     $('#addPriceMetricsForm').find('input').val('');
 });
 
+$('#downloadModal').on('hidden.bs.modal', function (e) {
+    $('#clientName').val('');
+    $('#clientAddress').val('');
+    $('#clientMobileNumber').val('');
+    $('#clientEmail').val('');
+});
+
 function modalClose(modal) {
     modal.modal("hide");
 }
@@ -88,6 +95,9 @@ $(document).on('click', '#updateBusinessSubmit', function () {
             $('#updateBusinessModal').modal('hide');
             toastr.success(response.message, "Success");
             window.businessTypeTable.ajax.reload(null, false);
+            window.pricetable.ajax.reload(null, false);
+        
+            $('#business_id option[value="' + businessId + '"]').text(response.name);
         },
         error: function (error) {
             console.error('Error updating business data:', error);

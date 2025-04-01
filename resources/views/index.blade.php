@@ -75,7 +75,7 @@
 
                                 <div class="calculator-actions d-flex mb-4">
                                     <button onclick="calculateTotal()" type="button" class="btn common-gradient-btn me-2 flex-grow-1">Calculate</button>
-                                    <button onclick="openDownloadModal()" type="button" class="btn common-coral-btn-bordered flex-grow-1">Download PDF</button>
+                                    <button onclick="openDownloadModal()" type="button" class="btn common-coral-btn-bordered flex-grow-1" disabled="true" id="downloadPdfBtn">Download PDF</button>
                                 </div>
 
                                 <div id="totalResult" class="mt-4">
@@ -107,6 +107,14 @@
                     <label for="clientAddress" class="form-label">Client Address</label>
                     <textarea class="form-control" id="clientAddress" rows="3" placeholder="Enter client address"></textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="clientMobileNumber" class="form-label">Client Mobile Number</label>
+                    <input class="form-control" id="clientMobileNumber" rows="3" placeholder="Enter client mobile number" type="text"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="clientEmail" class="form-label">Client Email</label>
+                    <input class="form-control" id="clientEmail" rows="3" placeholder="Enter client email" type="email"></input>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
@@ -123,39 +131,69 @@
         $('#downloadModal').modal('show');
     }
 
-     function downloadPDF() {
-         let clientName = $('#clientName').val();
-         let clientAddress = $('#clientAddress').val();
-         let totalResultHtml = $('#totalResult').html();
+    function downloadPDF() {
+        let clientName = $('#clientName').val();
+        let clientAddress = $('#clientAddress').val();
+        let clientMobileNumber = $('#clientMobileNumber').val();
+        let clientEmail = $('#clientEmail').val();
+        let totalResultHtml = $('#totalResult').html();
 
-         let formData = new FormData();
-         formData.append('clientName', clientName);
-         formData.append('clientAddress', clientAddress);
-         formData.append('totalResultHtml', totalResultHtml);
-         formData.append('_token', $('input[name="_token"]').val());
+        if (clientName == "") {
+            toastr.error("Client name is required", "Error");
+        } else if (clientMobileNumber == "") {
+            toastr.error("Client mobile number is required", "Error");
+        } else if (!isValidSriLankanMobile(clientMobileNumber)) {
+            toastr.error("Invalid mobile number.", "Error");
+        } else {
+            let calculatedPricesHtml = '';
+            if (totalResultHtml.includes('<h5>Calculated Prices</h5>')) {
+                let start = totalResultHtml.indexOf('<h5>Calculated Prices</h5>');
+                let end = totalResultHtml.lastIndexOf('</strong></h3>');
 
-         $.ajax({
-             url: "{{ route('generate.pdf') }}",
-             type: 'POST',
-             data: formData,
-             processData: false,
-             contentType: false, 
-             xhrFields: {
-                 responseType: 'blob'
-             },
-             success: function(blob) {
-                 let link = document.createElement('a');
-                 link.href = window.URL.createObjectURL(blob);
-                 link.download = 'price_calculation.pdf';
-                 link.click();
+                if (start !== -1 && end !== -1) {
+                    calculatedPricesHtml = totalResultHtml.substring(start, end + '<h3><strong>Total:'.length);
+                    calculatedPricesHtml += '</strong></h3>';
+                }
+            }
 
-                 $('#downloadModal').modal('hide');
-             },
-             error: function(error) {
-                 console.error('Error generating PDF:', error);
-                 alert('Error generating PDF.');
-             }
-         });
-     }
+            let formData = new FormData();
+            formData.append('clientName', clientName);
+            formData.append('clientAddress', clientAddress);
+            formData.append('clientMobileNumber', clientMobileNumber);
+            formData.append('clientEmail', clientEmail);
+            formData.append('totalResultHtml', calculatedPricesHtml);
+            formData.append('_token', $('input[name="_token"]').val());
+
+            $.ajax({
+                url: "{{ route('generate.pdf') }}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(blob) {
+                    let link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'price_calculation.pdf';
+                    link.click();
+
+                    $('#downloadModal').modal('hide');
+                },
+                // error: function(error) {
+
+                //     if (error.responseJSON && error.responseJSON.error && error.responseJSON.message) {
+                //         let errors = error.responseJSON.message;
+                //         for (let field in errors) {
+                //             errors[field].forEach(message => {
+                //                 toastr.error(message, "Error");
+                //             });
+                //         }
+                //     } 
+                // }
+            });
+        }
+    }
 </script>
 @endsection

@@ -35,5 +35,11 @@ return [
     'enter_business_name' => 'Enter Business Name',
     'save' => 'Save',
     'close' => 'Close',
-    'add_price_metrics' => 'Add Price Metrics'
+    'add_price_metrics' => 'Add Price Metrics',
+    'customer' => 'Customer',
+    'name' => 'Name',
+    'invoice' => 'Invoice',
+    'number' => 'Number',
+    'mobile' => 'Mobile',
+    'address' => 'Address'
 ];

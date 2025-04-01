@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Inventory;
+use App\Models\Invoice;
 use App\Models\Metrics;
+use App\Rules\AtLeastOneRequired;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 use function Laravel\Prompts\error;
 
@@ -188,12 +191,32 @@ class PriceController extends Controller
             '3' => 'nullable|numeric',
             '4' => 'nullable|numeric',
             '5' => 'nullable|numeric',
+            // 'at_least_one' => ['required', new AtLeastOneRequired(['1', '2', '3', '4', '5'])],
+            // 'at_least_one_inventory' => ['required', new AtLeastOneRequired(['Facebook', 'Youtube', 'Tiktok', 'Instagram', 'Twitter','Web_Pages-Tamil','Web_Pages-Sinhala'])],
         ]);
 
         if ($validator->fails()) {
             $response = [
                 "error" => true,
                 "message" => $validator->errors()
+            ];
+
+            return response()->json($response);
+        }
+
+        if (!$request->hasAny(["Facebook", "Youtube", "Tiktok", "Instagram", "Twitter", "Web_Pages-Tamil", "Web_Pages-Sinhala"])) {
+            $response = [
+                "error" => true,
+                "message" => "Please select atleast one inventory platform"
+            ];
+
+            return response()->json($response);
+        }
+
+        if (!$request->anyFilled("1", "2", "3", "4", "5")) {
+            $response = [
+                "error" => true,
+                "message" => "Please enter atleast one metric count"
             ];
 
             return response()->json($response);
@@ -233,9 +256,9 @@ class PriceController extends Controller
 
         foreach ($checkedInventoryKeys as $key) {
             if ($key === 'Web_Pages-Tamil') {
-                $key[] = 'Web Pages-Tamil';
+                $key = 'Web Pages-Tamil';
             } elseif ($key === 'Web_Pages-Sinhala') {
-                $key[] = 'Web Pages-Sinhala';
+                $key = 'Web Pages-Tamil';
             }
 
             $inventory = Inventory::where("name", $key)->first();
@@ -245,7 +268,6 @@ class PriceController extends Controller
         }
 
         $result = $this->calculateTotalPriceWithDetails($businessTypeId, $checkedInventoryIds, $metricValues);
-        Log::info(json_encode($result, JSON_PRETTY_PRINT));
         $response = [
             "error" => false,
             "data" => $result
@@ -303,18 +325,58 @@ class PriceController extends Controller
 
     public function generatePdf(Request $request)
     {
-        $clientName = $request->input('clientName');
-        $clientAddress = $request->input('clientAddress');
-        $totalResultHtml = $request->input('totalResultHtml');
-        
-        $data = [
-            'clientName' => $clientName,
-            'clientAddress' => $clientAddress,
-            'totalResultHtml' => $totalResultHtml,
-        ];
+        // $validator = Validator::make($request->all(), [
+        //     'clientName' => 'required|string',
+        //     'clientMobileNumber' => 'required',
+        //     'clientEmail' => 'nullable|email',
+        // ], [
+        //     'clientMobileNumber.regex' => 'The mobile number is not a valid Sri Lankan mobile number.',
+        // ]);
 
-        $pdf = PDF::loadView('pdf.price_calculation', $data);
 
-        return $pdf->download('price_calculation.pdf');
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'error' => true,
+        //         'message' => $validator->errors(),
+        //     ], 422);
+        // }
+
+        try {
+            $clientName = $request->input('clientName');
+            $clientAddress = $request->input('clientAddress');
+            $clientMobileNumber = $request->input('clientMobileNumber');
+            $clientEmail = $request->input('clientEmail');
+            $totalResultHtml = $request->input('totalResultHtml');
+
+            $prefix = 'INV-';
+            $date = now()->format('Ymd');
+            $invoiceNumber = $prefix . $date;
+
+            $invoice = Invoice::create([
+                'name' => $clientName,
+                'address' => $clientAddress,
+                'mobile' => $clientMobileNumber,
+                'email' => $clientEmail,
+                'invoice_number' => $invoiceNumber,
+                'status' => "0",
+            ]);
+
+            $data = [
+                'clientName' => $clientName,
+                'clientAddress' => $clientAddress,
+                'clientMobile' => $clientMobileNumber,
+                'invoiceNumber' => $invoiceNumber,
+                'totalResultHtml' => $totalResultHtml,
+            ];
+            $pdf = PDF::loadView('pdf.price_calculation', $data);
+
+            return $pdf->download('price_calculation.pdf');
+        } catch (Exception $e) {
+            Log::info($e);
+            return response()->json([
+                'error' => true,
+                'message' => 'An error occurred while generating the PDF.',
+            ], 500);
+        }
     }
 }

@@ -4,6 +4,11 @@ toastr.options = {
     "positionClass": "toast-bottom-right"
 };
 
+function isValidSriLankanMobile(mobileNumber) {
+    const sriLankanMobileRegex = /^(0|\+94)(7\d|11|2\d|3\d|4\d|5\d|6\d|81|91)\d{7}$/;
+    return sriLankanMobileRegex.test(mobileNumber);
+}
+
 function validateDoubleValues(input) {
     let value = input.value;
 
@@ -31,7 +36,6 @@ function validateDoubleValues(input) {
 
 function calculateTotal() {
     let formData = $('#price-calculate-form').serialize();
-    console.log("Form Data:", formData);
 
     $.ajax({
         url: "/calculate-price",
@@ -47,27 +51,32 @@ function calculateTotal() {
                 let missingPrices = result.missing_prices;
                 let priceDetails = result.price_details;
 
-                let resultHtml = '<h5>Calculated Prices</h5>';
+                let resultHtml ="";
                 if (priceDetails.length > 0) {
+                    console.log("prices are there");
+                    resultHtml = '<h5>Calculated Prices</h5>';
                     resultHtml += '<ul>';
                     priceDetails.forEach(detail => {
                         resultHtml += `<li>${detail.inventory_name} - ${detail.metrics_name}: ${detail.price} x ${detail.value} = ${detail.subtotal}</li>`;
                     });
                     resultHtml += '</ul>';
                     resultHtml += `<h3><strong>Total: ${totalPrice}</strong></h3>`;
-                } else {
-                    resultHtml += '<p>No prices calculated.</p>';
                 }
 
-                resultHtml += '<h5>Missing Prices</h5>';
                 if (missingPrices.length > 0) {
+                    console.log("prices are not there");
+                    resultHtml += '<h5>Missing Prices</h5>';
                     resultHtml += '<ul>';
                     missingPrices.forEach(missing => {
                         resultHtml += `<li>${missing.inventory_name} - ${missing.metrics_name}</li>`;
                     });
                     resultHtml += '</ul>';
+                }
+
+                if (priceDetails.length>0) {
+                    $("#downloadPdfBtn").prop("disabled", false);
                 } else {
-                    resultHtml += '<p>No missing prices.</p>';
+                    $("#downloadPdfBtn").prop("disabled", true);
                 }
 
                 $('#totalResult').html(resultHtml);

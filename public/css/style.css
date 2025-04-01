@@ -178,3 +178,6 @@
     /* padding-top: 15px;
     padding-bottom: 15px; */
 }
+.orderBtn, .dashboardBtn{
+    margin-right: 15px;
+}

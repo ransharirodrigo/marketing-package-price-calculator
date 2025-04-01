@@ -4,6 +4,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Business;
@@ -41,3 +42,6 @@ Route::put('/businesses/{id}', [BusinessController::class, 'update']);
 Route::post('/calculate-price', [PriceController::class, 'calculatePrice']);
 
 Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('generate.pdf');
+
+Route::get("orders",[OrderController::class,"index"])->name("order.index");
+Route::get("orders-list",[OrderController::class,"show"])->name("order.list");

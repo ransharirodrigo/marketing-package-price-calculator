@@ -10,6 +10,7 @@ function loadBusinessTypeTableData() {
             { data: 'business', orderable: false },
             { data: "action", orderable: false }
         ],
+        searching: false,
 
     });
     window.businessTypeTable = table;
@@ -30,6 +31,28 @@ function loadPriceMetricsTable() {
             { data: "price", orderable: false },
             { data: "action", orderable: false }
         ],
+        searching: false,
+
+    });
+    window.pricetable=table;
+}
+
+function loadOrderTable(){
+    var table = $('#order_table').DataTable({
+        ajax: {
+            url: orderListUrl,
+            type: 'GET',
+            dataSrc: '',
+        },
+        columns: [
+            { data: 'no', orderable: false },
+            { data: 'customer_name', orderable: false },
+            { data: "customer_mobile", orderable: false },
+            { data: "customer_email", orderable: false },
+            { data: "customer_address", orderable: false },
+            { data: "invoice_number", orderable: false }
+        ],
+        searching: false,
 
     });
     window.pricetable=table;
