@@ -12,7 +12,7 @@ class OrderController extends Controller
     }
 
     public function show(){
-        $orders = Invoice::get();
+        $orders = Invoice::orderBy('created_at', 'desc')->get();
         $data = [];
 
         $index = 1;

@@ -350,7 +350,8 @@ class PriceController extends Controller
 
             $prefix = 'INV-';
             $date = now()->format('Ymd');
-            $invoiceNumber = $prefix . $date;
+            $randomString = Str::random(5);
+            $invoiceNumber = $prefix . $date . '-' . $randomString;
 
             $invoice = Invoice::create([
                 'name' => $clientName,
@@ -368,11 +369,14 @@ class PriceController extends Controller
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
             ];
+
+            Log::info(json_encode($totalResultHtml,JSON_PRETTY_PRINT));
+
             $pdf = PDF::loadView('pdf.price_calculation', $data);
 
             return $pdf->download('price_calculation.pdf');
         } catch (Exception $e) {
-            Log::info($e);
+            
             return response()->json([
                 'error' => true,
                 'message' => 'An error occurred while generating the PDF.',
