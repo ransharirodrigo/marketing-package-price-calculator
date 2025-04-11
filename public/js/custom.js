@@ -51,15 +51,32 @@ function calculateTotal() {
                 let missingPrices = result.missing_prices;
                 let priceDetails = result.price_details;
 
-                let resultHtml ="";
+                let resultHtml = "";
                 if (priceDetails.length > 0) {
                     console.log("prices are there");
-                    resultHtml = '<h5>Calculated Prices</h5>';
-                    resultHtml += '<ul>';
+                    resultHtml += '<h5>Calculated Prices</h5>';
+                    resultHtml += '<table class="items-table" style="width: 100%; ">'; 
+                    resultHtml += '<thead>';
+                    resultHtml += '<tr>'; 
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Description</th>'; 
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Rate</th>';    
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Qty</th>';     
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Line Total</th>'; 
+                    resultHtml += '</tr>';
+                    resultHtml += '</thead>';
+                    resultHtml += '<tbody>';
+
                     priceDetails.forEach(detail => {
-                        resultHtml += `<li>${detail.inventory_name} - ${detail.metrics_name}: ${detail.price} x ${detail.value} = ${detail.subtotal}</li>`;
+                        resultHtml += '<tr>';
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.inventory_name} - ${detail.metrics_name}</td>`;
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.price}</td>`;   
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.value}</td>`;    
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${detail.subtotal}</td>`;
+                        resultHtml += '</tr>';
                     });
-                    resultHtml += '</ul>';
+
+                    resultHtml += '</tbody>';
+                    resultHtml += '</table>';
                     resultHtml += `<h3><strong>Total: ${totalPrice}</strong></h3>`;
                 }
 
@@ -73,7 +90,7 @@ function calculateTotal() {
                     resultHtml += '</ul>';
                 }
 
-                if (priceDetails.length>0) {
+                if (priceDetails.length > 0) {
                     $("#downloadPdfBtn").prop("disabled", false);
                 } else {
                     $("#downloadPdfBtn").prop("disabled", true);
