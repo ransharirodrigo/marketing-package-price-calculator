@@ -147,12 +147,12 @@
         } else {
             let calculatedPricesHtml = '';
             if (totalResultHtml.includes('<h5>Calculated Prices</h5>')) {
-                let start = totalResultHtml.indexOf('<h5>Calculated Prices</h5>');
-                let end = totalResultHtml.lastIndexOf('</strong></h3>');
+                let start = totalResultHtml.indexOf('<table');
+                let end = totalResultHtml.lastIndexOf('</table>');
 
                 if (start !== -1 && end !== -1) {
-                    calculatedPricesHtml = totalResultHtml.substring(start, end + '<h3><strong>Total:'.length);
-                    calculatedPricesHtml += '</strong></h3>';
+                    calculatedPricesHtml = totalResultHtml.substring(start, end );
+        
                 }
             }
 
