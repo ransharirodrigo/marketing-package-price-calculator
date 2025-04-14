@@ -50,36 +50,38 @@ function calculateTotal() {
                 let totalPrice = result.total_price;
                 let missingPrices = result.missing_prices;
                 let priceDetails = result.price_details;
+                let business_id = result.business_id;
 
                 let resultHtml = "";
                 if (priceDetails.length > 0) {
-                    console.log("prices are there");
-                    resultHtml += '<h5>Calculated Prices</h5>';
-                    resultHtml += '<table class="items-table" style="width: 100%; ">'; 
+                    // console.log("prices are there");
+
+                    resultHtml += `<input type="hidden" id="business_id" class="business_id" value="${business_id}"/>`;
+                    resultHtml += '<h5 style="font-size: 1em;">Calculated Prices</h5>';
+                    resultHtml += '<table class="items-table" style="width: 100%;">';
                     resultHtml += '<thead>';
-                    resultHtml += '<tr>'; 
-                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Description</th>'; 
-                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Rate</th>';    
-                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Qty</th>';     
-                    resultHtml += '<th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Line Total</th>'; 
+                    resultHtml += '<tr>';
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 6px; text-align: left; font-size:14px;">Description</th>';
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 6px; text-align: left;  font-size:14px;">Rate</th>';
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 6px; text-align: left;  font-size:14px;">Qty</th>';
+                    resultHtml += '<th style="border: 1px solid #ddd; padding: 6px; text-align: right;  font-size:14px;">Line Total</th>';
                     resultHtml += '</tr>';
                     resultHtml += '</thead>';
                     resultHtml += '<tbody>';
 
                     priceDetails.forEach(detail => {
                         resultHtml += '<tr>';
-                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.inventory_name} - ${detail.metrics_name}</td>`;
-                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.price}</td>`;   
-                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${detail.value}</td>`;    
-                        resultHtml += `<td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${detail.subtotal}</td>`;
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 6px;  font-size:14px;">${detail.inventory_name} - ${detail.metrics_name}</td>`;
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 6px; font-size:14px;">${detail.price}</td>`;
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 6px;  font-size:14px;">${detail.value}</td>`;
+                        resultHtml += `<td style="border: 1px solid #ddd; padding: 6px; text-align: right;  font-size:14px;">${detail.subtotal}</td>`;
                         resultHtml += '</tr>';
                     });
 
                     resultHtml += '</tbody>';
                     resultHtml += '</table>';
-                    resultHtml += `<h3><strong>Total: ${totalPrice}</strong></h3>`;
+                    resultHtml += `<h3 style="font-size: 1.1em;"><strong>Total: ${totalPrice}</strong></h3>`;
                 }
-
                 if (missingPrices.length > 0) {
                     console.log("prices are not there");
                     resultHtml += '<h5>Missing Prices</h5>';

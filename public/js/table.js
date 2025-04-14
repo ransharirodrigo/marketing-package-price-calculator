@@ -50,7 +50,8 @@ function loadOrderTable(){
             { data: "customer_mobile", orderable: false },
             { data: "customer_email", orderable: false },
             { data: "customer_address", orderable: false },
-            { data: "invoice_number", orderable: false }
+            { data: "invoice_number", orderable: false },
+            { data: "action", orderable: false }
         ],
         searching: false,
 

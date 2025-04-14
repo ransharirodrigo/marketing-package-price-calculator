@@ -137,6 +137,8 @@
         let clientMobileNumber = $('#clientMobileNumber').val();
         let clientEmail = $('#clientEmail').val();
         let totalResultHtml = $('#totalResult').html();
+        let total;
+        let businessId;
 
         if (clientName == "") {
             toastr.error("Client name is required", "Error");
@@ -146,14 +148,35 @@
             toastr.error("Invalid mobile number.", "Error");
         } else {
             let calculatedPricesHtml = '';
-            if (totalResultHtml.includes('<h5>Calculated Prices</h5>')) {
+
+            let businessIdStart = totalResultHtml.indexOf('<input type="hidden" id="business_id" class="business_id" value="');
+        if (businessIdStart !== -1) {
+            let startIndex = businessIdStart + '<input type="hidden" id="business_id" class="business_id" value="'.length;
+            let endIndex = totalResultHtml.indexOf('"', startIndex);
+            if (endIndex !== -1) {
+                businessId = totalResultHtml.substring(startIndex, endIndex);
+            }
+        }
+
+
+            if (totalResultHtml.includes('Calculated Prices')) {
+
+                console.log(totalResultHtml)
+
                 let start = totalResultHtml.indexOf('<table');
                 let end = totalResultHtml.lastIndexOf('</table>');
 
                 if (start !== -1 && end !== -1) {
-                    calculatedPricesHtml = totalResultHtml.substring(start, end );
-        
+                    calculatedPricesHtml = totalResultHtml.substring(start, end+ '</table>'.length );
                 }
+                
+                let totalStart = totalResultHtml.lastIndexOf('<strong>Total:');
+                let totalEnd = totalResultHtml.lastIndexOf('</strong></h3>');
+
+                if (totalStart !== -1 && totalEnd !== -1) {
+                    total = totalResultHtml.substring(totalStart + '<strong>Total:'.length, totalEnd).trim();
+                }
+
             }
 
             let formData = new FormData();
@@ -162,6 +185,8 @@
             formData.append('clientMobileNumber', clientMobileNumber);
             formData.append('clientEmail', clientEmail);
             formData.append('totalResultHtml', calculatedPricesHtml);
+            formData.append('total', total);
+            formData.append('business_id', businessId);
             formData.append('_token', $('input[name="_token"]').val());
 
             $.ajax({

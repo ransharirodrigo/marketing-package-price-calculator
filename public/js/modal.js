@@ -194,3 +194,46 @@ $(document).on('click', '#update_price_metrics', function () {
         }
     });
 });
+
+
+$(document).on('click', '.view-invoice-items-btn', function () {
+    let invoiceNumber = $(this).data('id');
+    let url = $(this).data('url');
+    let modal = $('#invoiceItemModal');
+    let container = $('#invoice-items-container');
+    let modalTitle = $('#invoiceItemModalLabel');
+
+    container.empty(); 
+    modalTitle.text(`Invoice Items for Invoice: ${invoiceNumber}`);
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            if (data && data.length > 0) {
+                let tableHtml = '<table class="table table-bordered">';
+                tableHtml += '<thead><tr><th>Description</th><th>Rate</th><th>Qty</th><th>Line Total</th></tr></thead><tbody>';
+
+                let total = 0;
+
+                $.each(data, function (index, item) {
+                    tableHtml += `<tr><td>${item.description}</td><td>${item.rate}</td><td>${item.qty}</td><td>${item.line_total}</td></tr>`;
+                    total += parseFloat(item.line_total); 
+                });
+
+                tableHtml += '</tbody></table>';
+                container.append(tableHtml);
+
+                container.append(`<h4 class="mt-3">Total: LKR ${total.toFixed(2)}</h4>`);
+            } else {
+                container.append('<p>No items found for this invoice.</p>');
+            }
+            modal.modal('show');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching invoice items:", error);
+            container.append('<p class="text-danger">Error loading invoice items.</p>');
+            modal.modal('show');
+        }
+    });
+});

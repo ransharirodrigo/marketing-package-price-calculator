@@ -45,3 +45,4 @@ Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('gener
 
 Route::get("orders",[OrderController::class,"index"])->name("order.index");
 Route::get("orders-list",[OrderController::class,"show"])->name("order.list");
+Route::get('view-invoice-items/{invoiceNumber}', [OrderController::class, 'viewInvoiceItems'])->name('invoice.items.view');

@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Inventory;
 use App\Models\Invoice;
+use App\Models\InvoiceItems;
 use App\Models\Metrics;
 use App\Rules\AtLeastOneRequired;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -258,7 +259,7 @@ class PriceController extends Controller
             if ($key === 'Web_Pages-Tamil') {
                 $key = 'Web Pages-Tamil';
             } elseif ($key === 'Web_Pages-Sinhala') {
-                $key = 'Web Pages-Tamil';
+                $key = 'Web Pages-Sinhala';
             }
 
             $inventory = Inventory::where("name", $key)->first();
@@ -317,6 +318,7 @@ class PriceController extends Controller
         }
 
         return [
+            'business_id' => $businessId,
             'total_price' => $totalPrice,
             'missing_prices' => $missingPrices,
             'price_details' => $priceDetails,
@@ -347,6 +349,8 @@ class PriceController extends Controller
             $clientMobileNumber = $request->input('clientMobileNumber');
             $clientEmail = $request->input('clientEmail');
             $totalResultHtml = $request->input('totalResultHtml');
+            $total = $request->input('total');
+            $business_id = $request->input('business_id');
 
             $prefix = 'INV-';
             $date = now()->format('Ymd');
@@ -362,21 +366,55 @@ class PriceController extends Controller
                 'status' => "0",
             ]);
 
+            $itemDetails = [];
+            if (preg_match_all('/<tr>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<\/tr>/s', $totalResultHtml, $matches, PREG_SET_ORDER)) {
+                for ($i = 0; $i < count($matches); $i++) {
+                    $row = $matches[$i];
+                    $description = trim(strip_tags($row[1]));
+                    $rate = trim(strip_tags($row[2]));
+                    $qty = trim(strip_tags($row[3]));
+                    $lineTotal = trim(strip_tags($row[4]));
+
+                    $descriptionParts = explode(' - ', $description);
+                    $inventoryName = isset($descriptionParts[0]) ? trim($descriptionParts[0]) : null;
+                    $metricsName = isset($descriptionParts[1]) ? trim($descriptionParts[1]) : null;
+
+                    $inventory = Inventory::where('name', $inventoryName)->first();
+                    $metric = Metrics::where('name', $metricsName)->first();
+
+                    if ($inventory && $metric) {
+                        $itemDetails[] = [
+                            'business_id' => $business_id,
+                            'invoice_number' => $invoiceNumber,
+                            'inventory_id' => $inventory->id,
+                            'metrics_id' => $metric->id,
+                            'qty' => $qty,
+                            
+                        ];
+                    } else {
+                        Log::warning("Could not find inventory or metric for item: " . $description);
+                    }
+                }
+
+                if (!empty($itemDetails)) {
+                    InvoiceItems::insert($itemDetails);
+                }
+            }
+
             $data = [
                 'clientName' => $clientName,
                 'clientAddress' => $clientAddress,
                 'clientMobile' => $clientMobileNumber,
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
+                'total' => $total
             ];
 
-            Log::info(json_encode($totalResultHtml,JSON_PRETTY_PRINT));
-
-            $pdf = PDF::loadView('pdf.price_calculation', $data);
+            $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
 
             return $pdf->download('price_calculation.pdf');
         } catch (Exception $e) {
-            
+
             return response()->json([
                 'error' => true,
                 'message' => 'An error occurred while generating the PDF.',

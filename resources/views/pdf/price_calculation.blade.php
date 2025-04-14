@@ -2,80 +2,94 @@
 <html>
 
 <head>
-    <title>INVOICE</title>
+    <title>Proforma Invoice</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            margin: 20px;
-            padding: 30px;
+            /* margin: 10px; */
             color: #333;
             background-color: #f4f4f4;
+            font-size: 0.9em;
         }
 
         .invoice-container {
             background-color: #fff;
-            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 0 auto;
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+            /* max-width: 800px; */
+            /* margin: 0 auto; */
+            height: 100%;
+            width: 100% !important;
         }
 
         .header {
-            background-color: #7B1FA2;
+            background-color:#FF5F6D;
             color: #fff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px 8px 0 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: row;
+            justify-content: space-between; 
+            align-items: flex-start; 
         }
 
         .logo {
-            font-size: 1.5em;
+            font-size: 1.4em;
             font-weight: bold;
+            text-align: left; 
         }
 
         .company-address {
-            text-align: right;
-            font-size: 0.9em;
+            text-align: right; 
+            font-size: 1em;
         }
 
         .invoice-details-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            font-size: 0.9em;
+            /* margin-top: 15px; */
+            font-size: 0.8em;
+            padding: 10px 15px 0; 
         }
 
         .prepared-for {
-            text-align: left;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .prepared-for strong,
+        .invoice-number-date strong,
+        .account-details-section h3{
+            font-size: 14px;
         }
 
         .invoice-number-date {
             text-align: right;
         }
 
-        .invoice-number-date strong {
-            color: #7B1FA2;
+        .invoice-number-date strong , .prepared-for strong, .account-details-section h3 {
+            color: #FF5F6D;
         }
 
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            font-size: 14px;
         }
 
         .items-table th,
         .items-table td {
             border-bottom: 1px solid #ddd;
-            padding: 10px;
+            padding: 8px;
             text-align: left;
+            font-size: 1px;
         }
 
         .items-table th {
             background-color: #f9f9f9;
             font-weight: bold;
+            padding: 6px;
         }
 
         .line-total {
@@ -84,11 +98,12 @@
 
         .totals-section {
             text-align: right;
-            margin-top: 20px;
+            /* margin-top: 15px; */
+            font-size: 0.9em;
         }
 
         .totals-section p {
-            margin-bottom: 5px;
+            /* margin-bottom: 3px; */
         }
 
         .totals-section strong {
@@ -98,15 +113,16 @@
         .notes-section,
         .account-details-section,
         .terms-section {
-            margin-top: 30px;
-            font-size: 0.9em;
+            /* margin-top: 20px; */
+            font-size: 0.8em;
             color: #555;
         }
 
         .section-title {
             color: #7B1FA2;
             font-weight: bold;
-            margin-bottom: 10px;
+            /* margin-bottom: 8px; */
+            font-size: 1em;
         }
     </style>
 </head>
@@ -115,7 +131,7 @@
     <div class="invoice-container">
         <div class="header">
             <div class="logo">AK Events And Production<br><small>(77) 788 6859</small></div>
-            <div class="company-address">
+            <div class="company-address" >
                 4A, Kuda Edanda Road,<br>
                 Wattala 11300
             </div>
@@ -124,46 +140,33 @@
         <div class="invoice-details-section">
             <div class="prepared-for">
                 <strong>Prepared For</strong><br>
-                The Accountants<br>
-                Lanka Hospitals<br>
-                578 Elvitigala Mawatha,<br>
-                Colombo 00500
-            </div>
+                {{ $clientName }}<br>
+                {{$clientAddress}}<br>
+            </div><br>
             <div class="invoice-number-date">
-                <strong>Invoice Number</strong><br>
+                <strong>Proforma Invoice Number</strong><br>
                 {{ $invoiceNumber }}<br><br>
-                <strong>Invoice Date</strong><br>
+                <strong> Date</strong><br>
                 {{ date('d/m/Y') }}
             </div>
         </div>
 
         <table class="items-table">
-                {!! $totalResultHtml !!}
+            {!! $totalResultHtml !!}
         </table>
 
         <div class="totals-section">
-            <p>Subtotal: <strong>LKR {{ number_format(160000.00, 2) }}</strong></p>
+            <p>Subtotal: <strong>LKR {{ number_format($total, 2) }}</strong></p>
             <p>Tax: <strong>LKR {{ number_format(0.00, 2) }}</strong></p>
-            <p><strong>Estimate Total (LKR): LKR {{ number_format(160000.00, 2) }}</strong></p>
-        </div>
-
-        <div class="notes-section">
-            <h3 class="section-title">Notes</h3>
-            <p>150th Heart Surgery Celebration- Senthil Kumaran's Relief fund</p>
-            <p>Price and terms are negotiable upon confirmation.</p>
+            <p><strong>Estimate Total (LKR): LKR {{ number_format($total, 2) }}</strong></p>
         </div>
 
         <div class="account-details-section">
             <h3 class="section-title">Account Details:</h3>
-            <p>ACCOUNT NAME : K. Arulnathan</p>
-            <p>ACCOUNT NUMBER: 87355135</p>
-            <p>Bank : BANK OF CEYLON</p>
-            <p>Branch : KOTAHENA</p>
-        </div>
-
-        <div class="terms-section">
-            <h3 class="section-title">Terms</h3>
-            <p>60% Advance with order confirmation</p>
+            <p>ACCOUNT NAME : THE BUSINESS SOLUTIONS</p>
+            <p>ACCOUNT NUMBER:1000683057</p>
+            <p>BANK : COMMERCIAL BANK</p>
+            <p>BRANCH : WATTALA</p>
         </div>
     </div>
 </body>
