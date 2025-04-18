@@ -42,7 +42,14 @@ Route::put('/businesses/{id}', [BusinessController::class, 'update']);
 Route::post('/calculate-price', [PriceController::class, 'calculatePrice']);
 
 Route::post("/generate-pdf",[PriceController::class,"generatePdf"])->name('generate.pdf');
+Route::post("/preview-pdf",[PriceController::class,"previewPdf"])->name('preview.pdf');
 
 Route::get("orders",[OrderController::class,"index"])->name("order.index");
 Route::get("orders-list",[OrderController::class,"show"])->name("order.list");
 Route::get('view-invoice-items/{invoiceNumber}', [OrderController::class, 'viewInvoiceItems'])->name('invoice.items.view');
+
+Route::get('/get-sort-values', [OrderController::class,"getSortValue"])->name('get.sort.values');
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::delete('/businesses/{business}/delete', [BusinessController::class, 'destroy'])->name('businesses.destroy');

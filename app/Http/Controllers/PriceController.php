@@ -352,11 +352,16 @@ class PriceController extends Controller
             $total = $request->input('total');
             $business_id = $request->input('business_id');
 
-            $prefix = 'INV-';
-            $date = now()->format('Ymd');
-            $randomString = Str::random(5);
-            $invoiceNumber = $prefix . $date . '-' . $randomString;
-
+            $prefix = 'PROFORMA-INV-';
+            $lastInvoice = Invoice::orderBy('id', 'desc')->first();
+            if ($lastInvoice) {
+                $lastId = $lastInvoice->id;
+                $nextId = $lastId + 1;
+                $invoiceNumber = $prefix . sprintf('%06d', $nextId);
+            } else {
+                $invoiceNumber = $prefix . '000001';
+            }
+            
             $invoice = Invoice::create([
                 'name' => $clientName,
                 'address' => $clientAddress,
@@ -392,7 +397,7 @@ class PriceController extends Controller
                             
                         ];
                     } else {
-                        Log::warning("Could not find inventory or metric for item: " . $description);
+                     
                     }
                 }
 
@@ -421,4 +426,48 @@ class PriceController extends Controller
             ], 500);
         }
     }
+
+
+    public function previewPdf(Request $request){
+        try {
+            $clientName = $request->input('clientName');
+            $clientAddress = $request->input('clientAddress');
+            $clientMobileNumber = $request->input('clientMobileNumber');
+            $clientEmail = $request->input('clientEmail');
+            $totalResultHtml = $request->input('totalResultHtml');
+            $total = $request->input('total');
+            $business_id = $request->input('business_id');
+
+            $prefix = 'PROFORMA-INV-';
+            $lastInvoice = Invoice::orderBy('id', 'desc')->first();
+            if ($lastInvoice) {
+                $lastId = $lastInvoice->id;
+                $nextId = $lastId + 1;
+                $invoiceNumber = $prefix . sprintf('%06d', $nextId);
+            } else {
+                $invoiceNumber = $prefix . '000001';
+            }
+
+            $data = [
+                'clientName' => $clientName,
+                'clientAddress' => $clientAddress,
+                'clientMobile' => $clientMobileNumber,
+                'invoiceNumber' => $invoiceNumber,
+                'totalResultHtml' => $totalResultHtml,
+                'total' => $total
+            ];
+
+            $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
+            return $pdf->stream();
+
+            
+        } catch (Exception $e) {
+
+            return response()->json([
+                'error' => true,
+                'message' => 'An error occurred while generating the PDF.',
+            ], 500);
+        }
+    }
+
 }

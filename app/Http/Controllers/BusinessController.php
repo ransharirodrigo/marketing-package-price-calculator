@@ -22,7 +22,7 @@ class BusinessController extends Controller
             $data[] = [
                 'no' => $index,
                 'business' => $business->name,
-                "action" => "<i class='fas fa-edit edit-business-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' style='cursor: pointer; margin-left: 10px;'></i>"
+                "action" => "<i class='fas fa-edit edit-business-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/delete' style='cursor: pointer; margin-left: 10px;'></i>"
             ];
             $index++;
         }
@@ -111,6 +111,17 @@ class BusinessController extends Controller
 
             return response()->json( $response);
         } catch (Exception $e) {
+        }
+    }
+
+    public function destroy($id){
+        $business = Business::find($id);
+
+        if ($business) {
+            $business->delete();
+            return response()->json(['success' => true, 'message' => 'Business Deleted Successfully.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Business not found.']);
         }
     }
 }

@@ -41,5 +41,8 @@ return [
     'invoice' => 'Invoice',
     'number' => 'Number',
     'mobile' => 'Mobile',
-    'address' => 'Address'
+    'address' => 'Address',
+    'value' => 'Value',
+    'apply' => 'Apply',
+    'proforma' => 'Proforma'
 ];

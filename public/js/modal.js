@@ -46,6 +46,7 @@ $("#saveBusiness").on("click", function (event) {
                 toastr.success(response.message, "Success");
                 modalClose(addBusinessModal);
                 window.businessTypeTable.ajax.reload(null, false);
+                window.location.reload();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -77,6 +78,34 @@ $(document).on('click', '.edit-business-btn', function () {
             alert('Error fetching business edit data.');
         }
     });
+});
+
+$(document).on('click', '.delete-btn', function () {
+    let businessId = $(this).data('id');
+    let deleteUrl = $(this).data('url'); 
+
+    
+        $.ajax({
+            url: deleteUrl, 
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response.success) {
+                    toastr.success(response.message, "Success");
+                    window.businessTypeTable.ajax.reload(null, false);
+                } else {
+                    console.log(response)
+                    toastr.error("An unexpected error occurred.", "Error");
+                }
+            },
+            error: function (error) {
+                console.log(error)
+                toastr.error("An unexpected error occurred.", "Error");
+            }
+        });
+    
 });
 
 $(document).on('click', '#updateBusinessSubmit', function () {
@@ -202,6 +231,7 @@ $(document).on('click', '.view-invoice-items-btn', function () {
     let modal = $('#invoiceItemModal');
     let container = $('#invoice-items-container');
     let modalTitle = $('#invoiceItemModalLabel');
+    let business_name = $('#business_name');
 
     container.empty(); 
     modalTitle.text(`Invoice Items for Invoice: ${invoiceNumber}`);
@@ -210,7 +240,11 @@ $(document).on('click', '.view-invoice-items-btn', function () {
         url: url,
         type: 'GET',
         success: function (data) {
+
+            console.log(data);
             if (data && data.length > 0) {
+                business_name.text(`Business: ${data[0].business}`);
+
                 let tableHtml = '<table class="table table-bordered">';
                 tableHtml += '<thead><tr><th>Description</th><th>Rate</th><th>Qty</th><th>Line Total</th></tr></thead><tbody>';
 

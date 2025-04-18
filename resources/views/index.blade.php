@@ -11,9 +11,7 @@
                     <div class="col-lg-4">
                         <div class="calculator-sidebar p-4 h-100">
                             <div class="d-flex align-items-center mb-4">
-                                <svg class="calculator-logo me-3" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h16V4H4zm2 2h12v2H6V6zm0 4h4v2H6v-2zm0 4h4v2H6v-2zm0 4h4v2H6v-2zm6-8h6v2h-6v-2zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2z" />
-                                </svg>
+                                <img src="{{ asset('images/logo.png') }}" class="agency-logo-for-navbar " style="width: 90px; height: 90px;">
                                 <h1 class="common-heading text-white fs-4 mb-0">{{ __("main.package")." ".__("main.price") ." ".__("main.calculator") }}</h1>
                             </div>
                             <div class="sidebar-info">
@@ -117,7 +115,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-coral-btn-bordered-small me-2" onclick="previewPDF()">Preview</button>
                 <button type="button" class="btn common-gradient-btn-small" onclick="downloadPDF()">Download</button>
             </div>
         </div>
@@ -160,8 +158,6 @@
 
 
             if (totalResultHtml.includes('Calculated Prices')) {
-
-                console.log(totalResultHtml)
 
                 let start = totalResultHtml.indexOf('<table');
                 let end = totalResultHtml.lastIndexOf('</table>');
@@ -206,17 +202,84 @@
 
                     $('#downloadModal').modal('hide');
                 },
-                // error: function(error) {
+                
+            });
+        }
+    }
 
-                //     if (error.responseJSON && error.responseJSON.error && error.responseJSON.message) {
-                //         let errors = error.responseJSON.message;
-                //         for (let field in errors) {
-                //             errors[field].forEach(message => {
-                //                 toastr.error(message, "Error");
-                //             });
-                //         }
-                //     } 
-                // }
+
+    function previewPDF(){
+        let clientName = $('#clientName').val();
+        let clientAddress = $('#clientAddress').val();
+        let clientMobileNumber = $('#clientMobileNumber').val();
+        let clientEmail = $('#clientEmail').val();
+        let totalResultHtml = $('#totalResult').html();
+        let total;
+        let businessId;
+
+        if (clientName == "") {
+            toastr.error("Client name is required", "Error");
+        } else if (clientMobileNumber == "") {
+            toastr.error("Client mobile number is required", "Error");
+        } else if (!isValidSriLankanMobile(clientMobileNumber)) {
+            toastr.error("Invalid mobile number.", "Error");
+        } else {
+            let calculatedPricesHtml = '';
+
+            let businessIdStart = totalResultHtml.indexOf('<input type="hidden" id="business_id" class="business_id" value="');
+        if (businessIdStart !== -1) {
+            let startIndex = businessIdStart + '<input type="hidden" id="business_id" class="business_id" value="'.length;
+            let endIndex = totalResultHtml.indexOf('"', startIndex);
+            if (endIndex !== -1) {
+                businessId = totalResultHtml.substring(startIndex, endIndex);
+            }
+        }
+
+
+            if (totalResultHtml.includes('Calculated Prices')) {
+
+                let start = totalResultHtml.indexOf('<table');
+                let end = totalResultHtml.lastIndexOf('</table>');
+
+                if (start !== -1 && end !== -1) {
+                    calculatedPricesHtml = totalResultHtml.substring(start, end+ '</table>'.length );
+                }
+                
+                let totalStart = totalResultHtml.lastIndexOf('<strong>Total:');
+                let totalEnd = totalResultHtml.lastIndexOf('</strong></h3>');
+
+                if (totalStart !== -1 && totalEnd !== -1) {
+                    total = totalResultHtml.substring(totalStart + '<strong>Total:'.length, totalEnd).trim();
+                }
+
+            }
+
+            let formData = new FormData();
+            formData.append('clientName', clientName);
+            formData.append('clientAddress', clientAddress);
+            formData.append('clientMobileNumber', clientMobileNumber);
+            formData.append('clientEmail', clientEmail);
+            formData.append('totalResultHtml', calculatedPricesHtml);
+            formData.append('total', total);
+            formData.append('business_id', businessId);
+            formData.append('_token', $('input[name="_token"]').val());
+
+            $.ajax({
+                url: "{{ route('preview.pdf') }}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+
+                    // $('#downloadModal').modal('hide');
+                },
+             
             });
         }
     }

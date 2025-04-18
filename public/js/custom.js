@@ -140,3 +140,53 @@ $("#business_id").on("change", function () {
         inventoryDropdown.append('<option value="">Select Inventory</option>');
     }
 });
+
+
+// SORT TYPE CHANGE
+$("#sortType").on("change", function () {
+    var selectedType = $(this).val();
+
+    $("#sortValue").prop("disabled", false);
+    $("#sortValue").empty().append('<option value="">Select Value</option>');
+
+    if (selectedType) {
+        $.ajax({
+            url: '/get-sort-values',
+            type: 'GET',
+            data: { sortType: selectedType },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.length);
+                if (data && Object.keys(data).length > 0) {
+                    console.log("done")
+                    $.each(data, function (key, value) {
+                        console.log("1")
+                        $("#sortValue").append('<option value="' + key + '">' + value + '</option>');
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX request failed:", status, error);
+            }
+        });
+    } else {
+        $("#sortValue").prop("disabled", true);
+        $("#sortValue").empty().append('<option value="">Select Value</option>');
+    }
+});
+
+$("#logout-btn").on("click",function(){
+    $.ajax({
+        url: '/logout',
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+                        window.location.href = '/'; 
+        },
+        error: function(xhr, status, error) {
+            console.error('Logout failed:', error);
+        }
+    });
+});

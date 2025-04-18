@@ -37,12 +37,18 @@ function loadPriceMetricsTable() {
     window.pricetable=table;
 }
 
+var orderTable;
+
 function loadOrderTable(){
-    var table = $('#order_table').DataTable({
+    orderTable  = $('#order_table').DataTable({
         ajax: {
             url: orderListUrl,
             type: 'GET',
             dataSrc: '',
+            data: function (d) {
+                d.type = $('#sortType').val();
+                d.value = $('#sortValue').val();
+            }
         },
         columns: [
             { data: 'no', orderable: false },
@@ -56,5 +62,9 @@ function loadOrderTable(){
         searching: false,
 
     });
-    window.pricetable=table;
+    window.orderTable=orderTable;
 }
+
+$('#applySort').click(function() {
+    orderTable.ajax.reload(); 
+});

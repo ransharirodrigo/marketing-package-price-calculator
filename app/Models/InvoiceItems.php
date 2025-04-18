@@ -32,4 +32,9 @@ class InvoiceItems extends Model
         return $this->belongsTo(Metrics::class, 'metrics_id'); 
     }
 
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_number', 'invoice_number');
+    }
+
 }
