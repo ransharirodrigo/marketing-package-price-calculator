@@ -185,6 +185,8 @@ class PriceController extends Controller
 
     public function calculatePrice(Request $request)
     {
+
+
         $validator = Validator::make($request->all(), [
             'businessType' => 'required|exists:business,id',
             '1' => 'nullable|numeric',
@@ -205,7 +207,8 @@ class PriceController extends Controller
             return response()->json($response);
         }
 
-        if (!$request->hasAny(["Facebook", "Youtube", "Tiktok", "Instagram", "Twitter", "Web_Pages-Tamil", "Web_Pages-Sinhala"])) {
+        try{
+           if (!$request->hasAny(["Facebook", "Youtube", "Tiktok", "Instagram", "Twitter", "Web_Pages-Tamil", "Web_Pages-Sinhala"])) {
             $response = [
                 "error" => true,
                 "message" => "Please select atleast one inventory platform"
@@ -273,7 +276,14 @@ class PriceController extends Controller
             "error" => false,
             "data" => $result
         ];
-        return response()->json($response);
+        return response()->json($response); 
+        }catch(Exception $e){
+            Log::info($e);
+             return response()->json([
+                'error' => true,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     private function calculateTotalPriceWithDetails(int $businessId, array $inventoryIds, array $metricValues): array

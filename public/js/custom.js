@@ -38,7 +38,7 @@ function calculateTotal() {
     let formData = $('#price-calculate-form').serialize();
 
     $.ajax({
-        url: "/calculate-price",
+        url: "calculate-price",
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -101,9 +101,21 @@ function calculateTotal() {
                 $('#totalResult').html(resultHtml);
             }
         },
-        error: function (error) {
-            console.error('Error updating price:', error);
-            alert('Error updating price.');
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error', jqXHR.responseJSON);
+            console.error('Error', jqXHR.responseJSON);
+            let errorMessage = 'Error calculating price.';
+        
+            // Try to parse the JSON response if the content type indicates it
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                errorMessage += ' ' + jqXHR.responseJSON.message;
+            } else if (errorThrown) {
+                errorMessage += ' ' + errorThrown; // Default error message from jQuery
+            } else if (textStatus) {
+                errorMessage += ' ' + textStatus; // Status such as 'timeout', 'abort', 'error'
+            }
+        
+            toastr.error(errorMessage, "Error"); // Use Toastr to display the error
         }
     });
 }
@@ -151,16 +163,16 @@ $("#sortType").on("change", function () {
 
     if (selectedType) {
         $.ajax({
-            url: '/get-sort-values',
+            url: 'get-sort-values',
             type: 'GET',
             data: { sortType: selectedType },
             dataType: 'json',
             success: function (data) {
-                console.log(data.length);
+               
                 if (data && Object.keys(data).length > 0) {
-                    console.log("done")
+                
                     $.each(data, function (key, value) {
-                        console.log("1")
+                     
                         $("#sortValue").append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -177,7 +189,7 @@ $("#sortType").on("change", function () {
 
 $("#logout-btn").on("click",function(){
     $.ajax({
-        url: '/logout',
+        url: 'logout',
         type: 'POST',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

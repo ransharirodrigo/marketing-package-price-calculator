@@ -1,6 +1,6 @@
 $('#addBusinessModal').on('hidden.bs.modal', function (e) {
     $('#businessName').val('');
-    $(this).remove();
+    // $(this).remove();
 });
 
 $('#addPriceMetricsModal').on('hidden.bs.modal', function (e) {
@@ -95,6 +95,7 @@ $(document).on('click', '.delete-btn', function () {
                 if (response.success) {
                     toastr.success(response.message, "Success");
                     window.businessTypeTable.ajax.reload(null, false);
+                    window.location.reload();
                 } else {
                     console.log(response)
                     toastr.error("An unexpected error occurred.", "Error");
@@ -111,7 +112,7 @@ $(document).on('click', '.delete-btn', function () {
 $(document).on('click', '#updateBusinessSubmit', function () {
     let formData = $('#updateBusinessForm').serialize();
     let businessId = $('#updateBusinessModal input[name="id"]').val();
-    let url = '/businesses/' + businessId;
+    let url = 'businesses/' + businessId;
 
     $.ajax({
         url: url,

@@ -130,7 +130,7 @@
 <body>
     <div class="invoice-container">
         <div class="header">
-            <div class="logo">AK Events And Production<br><small>(77) 788 6859</small></div>
+            <div class="logo">THE BUSINESS SOLUTIONS<br><small>(77) 760 7644</small></div>
             <div class="company-address" >
                 4A, Kuda Edanda Road,<br>
                 Wattala 11300

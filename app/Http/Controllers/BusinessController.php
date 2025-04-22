@@ -22,7 +22,7 @@ class BusinessController extends Controller
             $data[] = [
                 'no' => $index,
                 'business' => $business->name,
-                "action" => "<i class='fas fa-edit edit-business-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' data-url='/businesses/" . $business->id . "/delete' style='cursor: pointer; margin-left: 10px;'></i>"
+                "action" => "<i class='fas fa-edit edit-business-btn' data-id='" . $business->id . "' data-url='businesses/" . $business->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-btn' data-id='" . $business->id . "' data-url='businesses/" . $business->id . "/delete' style='cursor: pointer; margin-left: 10px;'></i>"
             ];
             $index++;
         }
