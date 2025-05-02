@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\BusinessInventoryMetricsPrices;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -114,14 +115,21 @@ class BusinessController extends Controller
         }
     }
 
-    public function destroy($id){
-        $business = Business::find($id);
+ 
 
-        if ($business) {
-            $business->delete();
-            return response()->json(['success' => true, 'message' => 'Business Deleted Successfully.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Business not found.']);
-        }
+    public function destroy($id)
+{
+    $business = Business::find($id);
+    
+    if ($business) {
+        BusinessInventoryMetricsPrices::where('business_id', $id)->delete();
+        
+        $business->delete();
+        
+        return response()->json(['success' => true, 'message' => 'Business Deleted Successfully.']);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Business not found.']);
     }
+}
+
 }

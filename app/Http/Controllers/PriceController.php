@@ -185,8 +185,7 @@ class PriceController extends Controller
 
     public function calculatePrice(Request $request)
     {
-
-
+    
         $validator = Validator::make($request->all(), [
             'businessType' => 'required|exists:business,id',
             '1' => 'nullable|numeric',
@@ -195,95 +194,93 @@ class PriceController extends Controller
             '4' => 'nullable|numeric',
             '5' => 'nullable|numeric',
             // 'at_least_one' => ['required', new AtLeastOneRequired(['1', '2', '3', '4', '5'])],
-            // 'at_least_one_inventory' => ['required', new AtLeastOneRequired(['Facebook', 'Youtube', 'Tiktok', 'Instagram', 'Twitter','Web_Pages-Tamil','Web_Pages-Sinhala'])],
+            // 'at_least_one_inventory' => ['required', new AtLeastOneRequired($this->getAllInventoryRequestKeysFromDatabaseWithUnderscores())],
         ]);
-
+    
         if ($validator->fails()) {
             $response = [
                 "error" => true,
-                "message" => $validator->errors()
+                "message" => $validator->errors(),
             ];
-
+    
             return response()->json($response);
         }
-
-        try{
-           if (!$request->hasAny(["Facebook", "Youtube", "Tiktok", "Instagram", "Twitter", "Web_Pages-Tamil", "Web_Pages-Sinhala"])) {
-            $response = [
-                "error" => true,
-                "message" => "Please select atleast one inventory platform"
-            ];
-
-            return response()->json($response);
-        }
-
-        if (!$request->anyFilled("1", "2", "3", "4", "5")) {
-            $response = [
-                "error" => true,
-                "message" => "Please enter atleast one metric count"
-            ];
-
-            return response()->json($response);
-        }
-
-        $businessTypeId = $request->input('businessType');
-        $inventoryKeysToCheck = [
-            'Facebook',
-            'Youtube',
-            'Tiktok',
-            'Instagram',
-            'Twitter',
-            'Web_Pages-Tamil',
-            'Web_Pages-Sinhala',
-        ];
-        $metricValues = $request->only(['1', '2', '3', '4', '5']);
-
-        $business = Business::find($businessTypeId);
-
-        if (!$business) {
-            $response = [
-                "error" => true,
-                "message" => "Business not found."
-            ];
-            return response()->json($response);
-        }
-
-        $checkedInventoryKeys = [];
-
-        foreach ($inventoryKeysToCheck as $key) {
-            if ($request->has($key)) {
-                $checkedInventoryKeys[] = $key;
+    
+        try {
+            $allInventoryRequestKeys = $this->getAllInventoryRequestKeysFromDatabaseWithUnderscores();
+    
+            if (!$request->hasAny($allInventoryRequestKeys)) {
+                $response = [
+                    "error" => true,
+                    "message" => "Please select at least one inventory platform",
+                ];
+    
+                return response()->json($response);
             }
-        }
-
-        $checkedInventoryIds = [];
-
-        foreach ($checkedInventoryKeys as $key) {
-            if ($key === 'Web_Pages-Tamil') {
-                $key = 'Web Pages-Tamil';
-            } elseif ($key === 'Web_Pages-Sinhala') {
-                $key = 'Web Pages-Sinhala';
+    
+            if (!$request->anyFilled("1", "2", "3", "4", "5")) {
+                $response = [
+                    "error" => true,
+                    "message" => "Please enter at least one metric count",
+                ];
+    
+                return response()->json($response);
             }
-
-            $inventory = Inventory::where("name", $key)->first();
-            if ($inventory) {
-                $checkedInventoryIds[] = $inventory->id;
+    
+            $businessTypeId = $request->input('businessType');
+            $metricValues = $request->only(['1', '2', '3', '4', '5']);
+    
+            $business = Business::find($businessTypeId);
+    
+            if (!$business) {
+                $response = [
+                    "error" => true,
+                    "message" => "Business not found.",
+                ];
+                return response()->json($response);
             }
-        }
-
-        $result = $this->calculateTotalPriceWithDetails($businessTypeId, $checkedInventoryIds, $metricValues);
-        $response = [
-            "error" => false,
-            "data" => $result
-        ];
-        return response()->json($response); 
-        }catch(Exception $e){
+    
+            $checkedInventoryKeys = [];
+            foreach ($allInventoryRequestKeys as $requestKey) {
+                if ($request->has($requestKey)) {
+                    $checkedInventoryKeys[] = $requestKey;
+                }
+            }
+    
+            $checkedInventoryIds = [];
+            foreach ($checkedInventoryKeys as $requestKey) {
+                $inventoryName = str_replace('_', ' ', $requestKey);
+                $inventory = Inventory::where("name", $inventoryName)->first();
+                if ($inventory) {
+                    $checkedInventoryIds[] = $inventory->id;
+                }
+            }
+    
+            $result = $this->calculateTotalPriceWithDetails($businessTypeId, $checkedInventoryIds, $metricValues);
+            $response = [
+                "error" => false,
+                "data" => $result,
+            ];
+            return response()->json($response);
+        } catch (Exception $e) {
             Log::info($e);
-             return response()->json([
+            return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    private function getAllInventoryRequestKeysFromDatabaseWithUnderscores(): array
+    {
+        return Inventory::pluck('name')->map(function ($name) {
+            return str_replace(' ', '_', $name);
+        })->toArray();
+    }
+
+    private function getAllInventoryNamesFromDatabase(): array
+    {
+        return Inventory::pluck('name')->toArray();
     }
 
     private function calculateTotalPriceWithDetails(int $businessId, array $inventoryIds, array $metricValues): array

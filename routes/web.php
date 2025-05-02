@@ -53,3 +53,10 @@ Route::get('get-sort-values', [OrderController::class,"getSortValue"])->name('ge
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::delete('businesses/{business}/delete', [BusinessController::class, 'destroy'])->name('businesses.destroy');
+
+Route::get("inventory-list", [InventoryController::class, "show"])->name("inventory.list");
+Route::post("save-new-inventory", [InventoryController::class, "store"])->name("inventory.save");
+Route::get('inventories/{id}/edit', [InventoryController::class, 'edit']);
+Route::put('inventories/{id}', [InventoryController::class, 'update']);
+Route::delete('inventories/{inventory}/delete', [InventoryController::class, 'destroy'])->name('inventories.destroy');
+// Route::get('get-inventories-by-business/{business_id}', [InventoryController::class, 'getInventoriesByBusiness'])->name('get.inventories.by.business');

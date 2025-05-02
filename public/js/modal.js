@@ -1,6 +1,5 @@
 $('#addBusinessModal').on('hidden.bs.modal', function (e) {
     $('#businessName').val('');
-    // $(this).remove();
 });
 
 $('#addPriceMetricsModal').on('hidden.bs.modal', function (e) {
@@ -8,6 +7,11 @@ $('#addPriceMetricsModal').on('hidden.bs.modal', function (e) {
     $('#inventory_id').val('');
     $('#addPriceMetricsForm').find('input').val('');
 });
+
+$('#addInventoryModal').on('hidden.bs.modal', function (e) {
+    $('#inventoryName').val('');
+});
+
 
 $('#downloadModal').on('hidden.bs.modal', function (e) {
     $('#clientName').val('');
@@ -269,6 +273,116 @@ $(document).on('click', '.view-invoice-items-btn', function () {
             console.error("Error fetching invoice items:", error);
             container.append('<p class="text-danger">Error loading invoice items.</p>');
             modal.modal('show');
+        }
+    });
+});
+
+// INVENTORY MODAL
+var addInventoryModal = $('#addInventoryModal');
+
+$("#addInventory").on("click", function () {
+    addInventoryModal.modal('show');
+});
+
+$("#closeInventoryModal").on("click", function () {
+    modalClose(addInventoryModal);
+});
+
+$("#saveInventory").on("click", function (event) {
+    event.preventDefault();
+    
+    $.ajax({
+        url: 'save-new-inventory',
+        type: 'POST',
+        data: $('#addInventoryForm').serialize(),
+        success: function (response) {
+            if (response.error) {
+                toastr.error(response.message, "Error");
+            } else {
+                toastr.success(response.message, "Success");
+                modalClose(addInventoryModal);
+                window.tableInventory.ajax.reload(null, false);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                toastr.error(jqXHR.responseJSON.message, "Error");
+            } else {
+                toastr.error("An unexpected error occurred.", "Error");
+            }
+        }
+    });
+});
+
+$(document).on('click', '.edit-inventory-btn', function () {
+    let inventoryId = $(this).data('id');
+    let url = $(this).data('url');
+    
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (response) {
+            $('#updateInventoryModal input[name="id"]').val(response.id);
+            $('#updateInventoryModal input[name="updatedInventoryName"]').val(response.name);
+            
+            $('#updateInventoryModal').modal('show');
+        },
+        error: function (error) {
+            console.error('Error fetching inventory data for edit:', error);
+            alert('Error fetching inventory edit data.');
+        }
+    });
+});
+
+$(document).on('click', '#updateInventorySubmit', function () {
+    let formData = $('#updateInventoryForm').serialize();
+    let inventoryId = $('#updateInventoryModal input[name="id"]').val();
+    let url = 'inventories/' + inventoryId;
+    
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        data: formData,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            $('#updateInventoryModal').modal('hide');
+            toastr.success(response.message, "Success");
+            window.tableInventory.ajax.reload(null, false);
+            window.pricetable.ajax.reload(null, false);
+            
+        },
+        error: function (error) {
+            console.error('Error updating inventory data:', error);
+            alert('Error updating inventory data.');
+        }
+    });
+});
+
+
+$(document).on('click', '.delete-inventory-btn', function () {
+    let inventoryId = $(this).data('id');
+    let deleteUrl = $(this).data('url');
+    
+    $.ajax({
+        url: deleteUrl,
+        type: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.success) {
+                toastr.success(response.message, "Success");
+                window.tableInventory.ajax.reload(null, false);
+                window.pricetable.ajax.reload(null, false);
+            
+            } else {
+                toastr.error("An unexpected error occurred.", "Error");
+            }
+        },
+        error: function (error) {
+            toastr.error("An unexpected error occurred.", "Error");
         }
     });
 });

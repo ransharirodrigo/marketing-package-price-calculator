@@ -37,6 +37,25 @@ function loadPriceMetricsTable() {
     window.pricetable=table;
 }
 
+function loadInventoryTable() {
+    var table = $('#inventory_table').DataTable({
+        ajax: {
+            url: inventoryListUrl,
+            type: 'GET',
+            dataSrc: '',
+        },
+        columns: [
+            { data: 'no', orderable: false },
+            { data: 'name', orderable: false },
+            { data: "action", orderable: false }
+        ],
+        searching: false,
+
+    });
+    window.tableInventory=table;
+}
+
+
 var orderTable;
 
 function loadOrderTable(){

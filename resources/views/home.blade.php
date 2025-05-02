@@ -9,7 +9,7 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-12 col-md-6 ">
+                <div class="col-12 col-xl-6 ">
                     <h3 class="common-heading">{{__('main.business')." ".__('main.type')." ".__('main.management')}}</h3>
 
                     <div class="row ms-1">
@@ -32,7 +32,31 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 ">
+                <div class="col-12 col-xl-6">
+                    <h3 class="common-heading">{{__('main.inventory')." ".__('main.management')}}</h3>
+
+                    <div class="row ms-1">
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <div class="row">
+                                <button class="btn common-coral-btn-bordered-small" id="addInventory"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row px-3 mt-5">
+                        <table id="inventory_table" data-url="{{ url("inventory-list") }}" class="table table-bordered table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{__("main.no")}}</th>
+                                    <th scope="col">{{__("main.inventory")}}</th>
+                                    <th scope="col">{{__("main.action")}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-6 ">
                     <h3 class="common-heading">{{__('main.price')." ".__('main.metrics')." ".__('main.management')}}</h3>
 
                     <div class="row ms-1">
@@ -128,6 +152,30 @@
     </div>
 </div>
 
+<div class="modal fade" id="addInventoryModal" tabindex="-1" role="dialog" aria-labelledby="addInventoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title" id="addInventoryModalLabel">{{ __('main.add')." ".__('main.inventory') }}</h5>
+            </div>
+            <div class="modal-body">
+                <form id="addInventoryForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="name">{{ __('main.inventory')." ".__('main.name') }}</label>
+                        <input type="text" class="form-control common-form-control" id="inventoryName" name="inventoryName" placeholder="{{ __('main.enter_inventory_name') }}" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn common-coral-btn-bordered-small" id="closeInventoryModal" data-dismiss="modal">{{ __('main.close') }}</button>
+                <button type="button" class="btn common-gradient-btn-small" id="saveInventory">{{ __('main.save') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="updatePriceModal" tabindex="-1" aria-labelledby="updatePriceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -199,6 +247,33 @@
     </div>
 </div>
 
+<div class="modal fade" id="updateInventoryModal" tabindex="-1" aria-labelledby="updateInventoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateInventoryModalLabel">Update Inventory</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateInventoryForm">
+                    @csrf
+                    <input type="hidden" name="id">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Inventory Name</label>
+                        <input type="text" name="updatedInventoryName" class="form-control">
+                    </div>
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-gradient-btn-small" id="updateInventorySubmit">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -218,6 +293,14 @@
     const priceListUrl = "{{ url('price-list') }}";
     $(document).ready(function() {
         loadPriceMetricsTable();
+    });
+</script>
+
+<!-- INVENTORY TABLE DATA LOAD (NEW) -->
+<script>
+    const inventoryListUrl = "{{ url('inventory-list') }}";
+    $(document).ready(function() {
+        loadInventoryTable();
     });
 </script>
 

@@ -44,5 +44,6 @@ return [
     'address' => 'Address',
     'value' => 'Value',
     'apply' => 'Apply',
-    'proforma' => 'Proforma'
+    'proforma' => 'Proforma',
+    'enter_inventory_name' => 'Enter Inventory Name'
 ];
