@@ -7,6 +7,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Models\Business;
 use App\Models\Inventory;
 use App\Models\InventoryModal;
@@ -60,3 +61,8 @@ Route::get('inventories/{id}/edit', [InventoryController::class, 'edit']);
 Route::put('inventories/{id}', [InventoryController::class, 'update']);
 Route::delete('inventories/{inventory}/delete', [InventoryController::class, 'destroy'])->name('inventories.destroy');
 // Route::get('get-inventories-by-business/{business_id}', [InventoryController::class, 'getInventoriesByBusiness'])->name('get.inventories.by.business');
+
+Route::get("settings",[SettingsController::class,"index"])->name("settings.index");
+Route::post('notes', [SettingsController::class,'notesStore'])->name('settings.notes.store');
+
+Route::get('/business/{businessId}/inventory/{inventoryId}/price', [PriceController::class, 'getPriceForSelectedInventory']);

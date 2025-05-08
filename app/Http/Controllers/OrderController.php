@@ -21,8 +21,7 @@ class OrderController extends Controller
     public function show(Request $request)
     {
 
-        $orders = Invoice::orderBy('created_at', 'desc');
-
+        $orders = Invoice::has('invoiceItems')->orderBy('created_at', 'desc');
 
         if ($request->has('type') && $request->has('value')) {
             $type = $request->input('type');

@@ -45,5 +45,9 @@ return [
     'value' => 'Value',
     'apply' => 'Apply',
     'proforma' => 'Proforma',
-    'enter_inventory_name' => 'Enter Inventory Name'
+    'enter_inventory_name' => 'Enter Inventory Name',
+    'orders' => 'Orders',
+    'settings' => 'Settings',
+    'logout' => 'Logout',
+    'note' => 'Note'
 ];

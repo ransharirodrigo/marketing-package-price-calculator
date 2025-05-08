@@ -153,6 +153,35 @@ $("#business_id").on("change", function () {
     }
 });
 
+//INVENTORY SELECT - LOAD METRICS PRICES IF AVAILABLE
+$("#inventory_id").on("change", function () {
+    const inventoryId = $(this).val();
+    const businessId = $("#business_id").val();
+
+    if (businessId && inventoryId) {
+        $.ajax({
+            url: `business/${businessId}/inventory/${inventoryId}/price`, 
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data && data.price && Array.isArray(data.price)) {
+                    data.price.forEach(item => {
+                        const metricName = item.metric_name;
+                        const price = item.price;
+                    
+                        const input =document.getElementById(metricName);
+                        input.value=price;
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching price:", error);
+            }
+        });
+    }
+    
+});
+
 
 // SORT TYPE CHANGE
 $("#sortType").on("change", function () {
@@ -199,6 +228,30 @@ $("#logout-btn").on("click",function(){
         },
         error: function(xhr, status, error) {
             console.error('Logout failed:', error);
+        }
+    });
+});
+
+$('#settings-notes-form').submit(function(event) {
+    event.preventDefault(); 
+
+    var form = $(this);
+    var formData = form.serialize();
+
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            if (response.error === false) {
+                toastr.success(response.message);
+            } else {
+                toastr.error('Failed to save note.'); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log(error)
+            toastr.error('Error: ' + error);
         }
     });
 });

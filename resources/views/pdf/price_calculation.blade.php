@@ -23,24 +23,24 @@
         }
 
         .header {
-            background-color:#FF5F6D;
+            background-color: #FF5F6D;
             color: #fff;
             padding: 15px;
             border-radius: 8px 8px 0 0;
             display: flex;
             flex-direction: row;
-            justify-content: space-between; 
-            align-items: flex-start; 
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
         .logo {
             font-size: 1.4em;
             font-weight: bold;
-            text-align: left; 
+            text-align: left;
         }
 
         .company-address {
-            text-align: right; 
+            text-align: right;
             font-size: 1em;
         }
 
@@ -49,7 +49,7 @@
             justify-content: space-between;
             /* margin-top: 15px; */
             font-size: 0.8em;
-            padding: 10px 15px 0; 
+            padding: 10px 15px 0;
         }
 
         .prepared-for {
@@ -59,7 +59,8 @@
 
         .prepared-for strong,
         .invoice-number-date strong,
-        .account-details-section h3{
+        .account-details-section h3,
+        .notes-section h3 {
             font-size: 14px;
         }
 
@@ -67,7 +68,10 @@
             text-align: right;
         }
 
-        .invoice-number-date strong , .prepared-for strong, .account-details-section h3 {
+        .invoice-number-date strong,
+        .prepared-for strong,
+        .account-details-section h3,
+        .notes-section h3 {
             color: #FF5F6D;
         }
 
@@ -131,7 +135,7 @@
     <div class="invoice-container">
         <div class="header">
             <div class="logo">THE BUSINESS SOLUTIONS<br><small>(77) 760 7644</small></div>
-            <div class="company-address" >
+            <div class="company-address">
                 4A, Kuda Edanda Road,<br>
                 Wattala 11300
             </div>
@@ -168,6 +172,13 @@
             <p>BANK : COMMERCIAL BANK</p>
             <p>BRANCH : WATTALA</p>
         </div>
+
+        @if (!empty($invoice_note))
+            <div class="notes-section">
+                        <h3 class="section-title">Note:</h3>
+                        <p>{!! $invoice_note !!}</p>
+                    </div>
+            @endif
     </div>
 </body>
 

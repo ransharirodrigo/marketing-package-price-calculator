@@ -8,6 +8,7 @@ use App\Models\Inventory;
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\Metrics;
+use App\Models\Setting;
 use App\Rules\AtLeastOneRequired;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -25,25 +26,25 @@ class PriceController extends Controller
         $validator = Validator::make($request->all(), [
             'business_id' => 'required|exists:business,id',
             'inventory_id' => 'required|exists:inventory,id',
-            'Impressions' => 'required|numeric',
-            'Views' => 'required|numeric',
-            'Clicks' => 'required|numeric',
-            'Video_views' => 'required|numeric',
-            'Calls' => 'required|numeric',
+            'Impressions' => 'nullable|numeric',
+            'Views' => 'nullable|numeric',
+            'Clicks' => 'nullable|numeric',
+            'Video_views' => 'nullable|numeric',
+            'Calls' => 'nullable|numeric',
         ], [
             'business_id.required' => 'Please select a business.',
             'business_id.exists' => 'The selected business does not exist.',
             'inventory_id.required' => 'Please select an inventory type.',
             'inventory_id.exists' => 'The selected inventory type does not exist.',
-            'Impressions.required' => 'Impression price is required.',
+            // 'Impressions.required' => 'Impression price is required.',
             'Impressions.numeric' => 'Impression price must be a number.',
-            'Views.required' => 'View price is required.',
+            // 'Views.required' => 'View price is required.',
             'Views.numeric' => 'View price must be a number.',
-            'Clicks.required' => 'Click price is required.',
+            // 'Clicks.required' => 'Click price is required.',
             'Clicks.numeric' => 'Click price must be a number.',
-            'Video_views.required' => 'Video view price is required.',
+            // 'Video_views.required' => 'Video view price is required.',
             'Video_views.numeric' => 'Video view price must be a number.',
-            'Calls.required' => 'Call price is required.',
+            // 'Calls.required' => 'Call price is required.',
             'Calls.numeric' => 'Call price must be a number.',
         ]);
 
@@ -64,19 +65,33 @@ class PriceController extends Controller
                 $metric = Metrics::where('name', $metricName)->first();
 
                 if ($metric) {
+                    $requestMetricName = $metricName;
                     if ($metricName == "Video views") {
-                        $metricName = "Video_views";
+                        $requestMetricName = "Video_views";
                     }
 
-                    $price = $request->input($metricName);
+                    $price = $request->input($requestMetricName);
 
                     if ($price !== null) {
-                        $businessInventoryMetricPrice = new BusinessInventoryMetricsPrices();
-                        $businessInventoryMetricPrice->business_id = $businessId;
-                        $businessInventoryMetricPrice->inventory_id = $inventoryId;
-                        $businessInventoryMetricPrice->metrics_id = $metric->id;
-                        $businessInventoryMetricPrice->price = $price;
-                        $businessInventoryMetricPrice->save();
+                        // Check if a record exists for this business, inventory, and metric
+                        $existingRecord = BusinessInventoryMetricsPrices::where('business_id', $businessId)
+                            ->where('inventory_id', $inventoryId)
+                            ->where('metrics_id', $metric->id)
+                            ->first();
+
+                        if ($existingRecord) {
+                            // Update the existing record
+                            $existingRecord->price = $price;
+                            $existingRecord->save();
+                        } else {
+                            // Create a new record
+                            $businessInventoryMetricPrice = new BusinessInventoryMetricsPrices();
+                            $businessInventoryMetricPrice->business_id = $businessId;
+                            $businessInventoryMetricPrice->inventory_id = $inventoryId;
+                            $businessInventoryMetricPrice->metrics_id = $metric->id;
+                            $businessInventoryMetricPrice->price = $price;
+                            $businessInventoryMetricPrice->save();
+                        }
                     }
                 } else {
                     $response = [
@@ -185,7 +200,7 @@ class PriceController extends Controller
 
     public function calculatePrice(Request $request)
     {
-    
+
         $validator = Validator::make($request->all(), [
             'businessType' => 'required|exists:business,id',
             '1' => 'nullable|numeric',
@@ -196,42 +211,42 @@ class PriceController extends Controller
             // 'at_least_one' => ['required', new AtLeastOneRequired(['1', '2', '3', '4', '5'])],
             // 'at_least_one_inventory' => ['required', new AtLeastOneRequired($this->getAllInventoryRequestKeysFromDatabaseWithUnderscores())],
         ]);
-    
+
         if ($validator->fails()) {
             $response = [
                 "error" => true,
                 "message" => $validator->errors(),
             ];
-    
+
             return response()->json($response);
         }
-    
+
         try {
             $allInventoryRequestKeys = $this->getAllInventoryRequestKeysFromDatabaseWithUnderscores();
-    
+
             if (!$request->hasAny($allInventoryRequestKeys)) {
                 $response = [
                     "error" => true,
                     "message" => "Please select at least one inventory platform",
                 ];
-    
+
                 return response()->json($response);
             }
-    
+
             if (!$request->anyFilled("1", "2", "3", "4", "5")) {
                 $response = [
                     "error" => true,
                     "message" => "Please enter at least one metric count",
                 ];
-    
+
                 return response()->json($response);
             }
-    
+
             $businessTypeId = $request->input('businessType');
             $metricValues = $request->only(['1', '2', '3', '4', '5']);
-    
+
             $business = Business::find($businessTypeId);
-    
+
             if (!$business) {
                 $response = [
                     "error" => true,
@@ -239,14 +254,14 @@ class PriceController extends Controller
                 ];
                 return response()->json($response);
             }
-    
+
             $checkedInventoryKeys = [];
             foreach ($allInventoryRequestKeys as $requestKey) {
                 if ($request->has($requestKey)) {
                     $checkedInventoryKeys[] = $requestKey;
                 }
             }
-    
+
             $checkedInventoryIds = [];
             foreach ($checkedInventoryKeys as $requestKey) {
                 $inventoryName = str_replace('_', ' ', $requestKey);
@@ -255,7 +270,7 @@ class PriceController extends Controller
                     $checkedInventoryIds[] = $inventory->id;
                 }
             }
-    
+
             $result = $this->calculateTotalPriceWithDetails($businessTypeId, $checkedInventoryIds, $metricValues);
             $response = [
                 "error" => false,
@@ -368,7 +383,7 @@ class PriceController extends Controller
             } else {
                 $invoiceNumber = $prefix . '000001';
             }
-            
+
             $invoice = Invoice::create([
                 'name' => $clientName,
                 'address' => $clientAddress,
@@ -401,10 +416,9 @@ class PriceController extends Controller
                             'inventory_id' => $inventory->id,
                             'metrics_id' => $metric->id,
                             'qty' => $qty,
-                            
+
                         ];
                     } else {
-                     
                     }
                 }
 
@@ -413,13 +427,16 @@ class PriceController extends Controller
                 }
             }
 
+            $invoice_note = Setting::where("type", "invoice_note")->first();
+
             $data = [
                 'clientName' => $clientName,
                 'clientAddress' => $clientAddress,
                 'clientMobile' => $clientMobileNumber,
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
-                'total' => $total
+                'total' => $total,
+                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : ""
             ];
 
             $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
@@ -435,7 +452,8 @@ class PriceController extends Controller
     }
 
 
-    public function previewPdf(Request $request){
+    public function previewPdf(Request $request)
+    {
         try {
             $clientName = $request->input('clientName');
             $clientAddress = $request->input('clientAddress');
@@ -455,19 +473,20 @@ class PriceController extends Controller
                 $invoiceNumber = $prefix . '000001';
             }
 
+            $invoice_note = Setting::where("type", "invoice_note")->first();
+
             $data = [
                 'clientName' => $clientName,
                 'clientAddress' => $clientAddress,
                 'clientMobile' => $clientMobileNumber,
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
-                'total' => $total
+                'total' => $total,
+                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : ""
             ];
 
             $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
             return $pdf->stream();
-
-            
         } catch (Exception $e) {
 
             return response()->json([
@@ -477,4 +496,25 @@ class PriceController extends Controller
         }
     }
 
+    public function getPriceForSelectedInventory(int $businessId, int $inventoryId)
+    {
+        $priceMetrics = BusinessInventoryMetricsPrices::with('metrics')
+            ->where('business_id', $businessId)
+            ->where('inventory_id', $inventoryId)
+            ->get();
+
+        $result = [];
+        foreach ($priceMetrics as $priceMetric) {
+            $result[] = [
+                'metric_name' => $priceMetric->metrics->name,
+                'price' => $priceMetric->price,
+            ];
+        }
+
+        $response = [
+            "error" => false,
+            "price" => $result
+        ];
+        return response()->json($response);
+    }
 }

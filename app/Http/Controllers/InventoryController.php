@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Inventory;
+use App\Models\InvoiceItems;
+use App\Models\Metrics;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,19 +17,22 @@ class InventoryController extends Controller
     public function getRelatedInventoryForBusiness(Request $request)
     {
         $businessId = $request->input("businessId");
-        $pricedInventoryIds = BusinessInventoryMetricsPrices::where('business_id', $businessId)
-            ->pluck('inventory_id')
-            ->toArray();
-
-        $unpricedInventories = Inventory::when(count($pricedInventoryIds) > 0, function ($query) use ($pricedInventoryIds) {
-            return $query->whereNotIn('id', $pricedInventoryIds);
-        })->get();
-
+        $inventories =Inventory::all(); 
+        $totalMetricsCount = Metrics::count(); 
+    
+        $unpricedInventories = $inventories->filter(function ($inventory) use ($businessId, $totalMetricsCount) {
+            $pricedMetricsCount =BusinessInventoryMetricsPrices::where('business_id', $businessId)
+                ->where('inventory_id', $inventory->id)
+                ->count();
+    
+            return $pricedMetricsCount < $totalMetricsCount;
+        });
+    
         $response = [
             'error' => false,
-            'message' => $unpricedInventories
+            'message' => $unpricedInventories->values()->all()
         ];
-
+    
         return response()->json($response);
     }
 
@@ -144,7 +149,7 @@ class InventoryController extends Controller
 
         if ($inventory) {
             BusinessInventoryMetricsPrices::where('inventory_id', $id)->delete();
-
+            InvoiceItems::where('inventory_id', $id)->delete();
             $inventory->delete();
 
             return response()->json(['success' => true, 'message' => 'Inventory Deleted Successfully.']);

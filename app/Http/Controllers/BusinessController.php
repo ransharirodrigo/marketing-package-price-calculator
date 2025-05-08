@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
+use App\Models\InvoiceItems;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -103,14 +104,14 @@ class BusinessController extends Controller
             $business->name = $request->name;
             $business->save();
 
-            $response=[
-                "error"=>false,
-                "message"=>"Business name updated successfully",
-                "id"=>$id,
-                "name"=>$request->name
+            $response = [
+                "error" => false,
+                "message" => "Business name updated successfully",
+                "id" => $id,
+                "name" => $request->name
             ];
 
-            return response()->json( $response);
+            return response()->json($response);
         } catch (Exception $e) {
         }
     }
@@ -118,18 +119,18 @@ class BusinessController extends Controller
  
 
     public function destroy($id)
-{
-    $business = Business::find($id);
-    
-    if ($business) {
-        BusinessInventoryMetricsPrices::where('business_id', $id)->delete();
-        
-        $business->delete();
-        
-        return response()->json(['success' => true, 'message' => 'Business Deleted Successfully.']);
-    } else {
-        return response()->json(['success' => false, 'message' => 'Business not found.']);
-    }
-}
+    {
+        $business = Business::find($id);
 
+        if ($business) {
+            BusinessInventoryMetricsPrices::where('business_id', $id)->delete();
+            InvoiceItems::where('business_id', $id)->delete();
+
+            $business->delete();
+
+            return response()->json(['success' => true, 'message' => 'Business Deleted Successfully.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Business not found.']);
+        }
+    }
 }
