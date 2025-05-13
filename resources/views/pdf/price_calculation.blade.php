@@ -136,7 +136,6 @@
         <div class="header">
            
             <div>
-                
                 @if($company_logo)
                 <img src="{{  $company_logo }}" alt="Company Logo" style="max-width: 90px; height: auto;">
                 @endif

@@ -1,7 +1,7 @@
 toastr.options = {
     "closeButton": true,
     "progressBar": true,
-    "positionClass": "toast-top-right",
+    "positionClass": "toast-middle-center",
     "showDuration": "500",
     "hideDuration": "100",
     "timeOut": "3000",
@@ -280,7 +280,7 @@ $('#company-setting-update-form').submit(function (event) {
             if (response.error === false) {
                 toastr.options = {
                     "progressBar": true,
-                    "positionClass": "toast-top-right",
+                    "positionClass": "toast-middle-center",
                     "showDuration": "500",
                     "hideDuration": "100",
                    "timeOut": "3000",
@@ -294,7 +294,7 @@ $('#company-setting-update-form').submit(function (event) {
                 toastr.success(response.message);
 
             } else {
-                toastr.options.positionClass = 'toast-top-right';
+                toastr.options.positionClass = 'toast-middle-center';
                 toastr.error('Failed to update.');
             }
         },

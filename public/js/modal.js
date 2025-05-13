@@ -49,7 +49,7 @@ $("#saveBusiness").on("click", function (event) {
             } else {
                 toastr.options = {
                     "progressBar": true,
-                    "positionClass": "toast-top-right",
+                    "positionClass": 'toast-middle-center',
                     "showDuration": "500",
                     "hideDuration": "100",
                     "timeOut": "3000",
@@ -100,30 +100,61 @@ $(document).on('click', '.delete-btn', function () {
     let businessId = $(this).data('id');
     let deleteUrl = $(this).data('url'); 
 
-    
-        $.ajax({
-            url: deleteUrl, 
-            type: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    toastr.warning(
+         `<div class="d-flex flex-column align-items-center">
+            <p class="mb-2">Are you sure you want to delete this?</p>
+            <div>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger me-2">Delete</button>
+                <button type="button" class="btn btn-sm btn-secondary clear">Cancel</button>
+            </div>
+        </div>`,
+        '',
+        {
+            closeButton: true,
+            allowHtml: true,
+            progressBar: false,
+            positionClass: 'toast-middle-center',
+            timeOut: 0,
+            extendedTimeOut: 0,
+            preventDuplicates: true,
+            onShown: function (toast) {
+                $("#confirmDeleteBtn").on('click', function () {
+                   $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success(response.message, "Success");
+                                window.businessTypeTable.ajax.reload(null, false);
+                                window.location.reload();
+                            } else {
+                                console.log(response)
+                                toastr.error("An unexpected error occurred.", "Error");
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error)
+                            toastr.error("An unexpected error occurred.", "Error");
+                        }
+                    });
+                    $(toast).remove();
+                });
+
+                $(".clear").on('click', function () {
+                    $(toast).remove();
+                });
             },
-            success: function (response) {
-                if (response.success) {
-                    toastr.success(response.message, "Success");
-                    window.businessTypeTable.ajax.reload(null, false);
-                    window.location.reload();
-                } else {
-                    console.log(response)
-                    toastr.error("An unexpected error occurred.", "Error");
-                }
-            },
-            error: function (error) {
-                console.log(error)
-                toastr.error("An unexpected error occurred.", "Error");
+            onHidden: function (toast) {
+                $("#confirmDeleteBtn").off('click');
+                $(".clear").off('click');
             }
-        });
-    
+        }
+    );
 });
+
 
 $(document).on('click', '#updateBusinessSubmit', function () {
     let formData = $('#updateBusinessForm').serialize();
@@ -376,25 +407,57 @@ $(document).on('click', '#updateInventorySubmit', function () {
 $(document).on('click', '.delete-inventory-btn', function () {
     let inventoryId = $(this).data('id');
     let deleteUrl = $(this).data('url');
-    
-    $.ajax({
-        url: deleteUrl,
-        type: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function (response) {
-            if (response.success) {
-                toastr.success(response.message, "Success");
-                window.tableInventory.ajax.reload(null, false);
-                window.pricetable.ajax.reload(null, false);
-            
-            } else {
-                toastr.error("An unexpected error occurred.", "Error");
+
+    toastr.warning(
+         `<div class="d-flex flex-column align-items-center">
+            <p class="mb-2">Are you sure you want to delete this?</p>
+            <div>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger me-2">Delete</button>
+                <button type="button" class="btn btn-sm btn-secondary clear">Cancel</button>
+            </div>
+        </div>`,
+        '',
+        {
+            closeButton: true,
+            allowHtml: true,
+            progressBar: false,
+            positionClass: 'toast-middle-center',
+            timeOut: 0,
+            extendedTimeOut: 0,
+            preventDuplicates: true,
+            onShown: function (toast) {
+                $("#confirmDeleteBtn").on('click', function () {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success(response.message, "Success");
+                                window.tableInventory.ajax.reload(null, false);
+                                window.pricetable.ajax.reload(null, false);
+
+                            } else {
+                                toastr.error("An unexpected error occurred.", "Error");
+                            }
+                        },
+                        error: function (error) {
+                            toastr.error("An unexpected error occurred.", "Error");
+                        }
+                    });
+                    $(toast).remove();
+                });
+
+                $(".clear").on('click', function () {
+                    $(toast).remove();
+                });
+            },
+            onHidden: function (toast) {
+                $("#confirmDeleteBtn").off('click');
+                $(".clear").off('click');
             }
-        },
-        error: function (error) {
-            toastr.error("An unexpected error occurred.", "Error");
         }
-    });
+    );
 });

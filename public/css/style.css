@@ -190,3 +190,15 @@
 .toast-message {
   opacity: 1 !important;
 }
+
+.toast-middle-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0 !important; 
+}
+
+.toast-warning {
+    background-color: var(--orange)!important;
+    color: rgb(73, 69, 69); 
+}

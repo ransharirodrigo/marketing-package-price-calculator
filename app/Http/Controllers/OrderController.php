@@ -50,10 +50,10 @@ class OrderController extends Controller
         foreach ($orders as $order) {
             $data[] = [
                 'no' => $index,
-                'customer_name' => $order->name,
+                'customer_name' => ucwords( $order->name),
                 'customer_mobile' => $order->mobile,
                 'customer_email' => $order->email,
-                'customer_address' => $order->address,
+                'customer_address' => ucwords( $order->address),
                 'invoice_number' => $order->invoice_number,
                 "action" => "<i class='fas fa-eye view-invoice-items-btn' data-id='" . $order->invoice_number . "' data-url='view-invoice-items/" . $order->invoice_number . "' style='cursor: pointer;'></i>"
             ];
