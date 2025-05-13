@@ -47,10 +47,22 @@ $("#saveBusiness").on("click", function (event) {
             if (response.error) {
                 toastr.error(response.message, "Error");
             } else {
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "showDuration": "500",
+                    "hideDuration": "100",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "onHidden": function () {
+                        location.reload();
+                    }
+                }
                 toastr.success(response.message, "Success");
                 modalClose(addBusinessModal);
                 window.businessTypeTable.ajax.reload(null, false);
-                window.location.reload();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

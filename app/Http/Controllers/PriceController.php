@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SettingHelper;
 use App\Models\Business;
 use App\Models\BusinessInventoryMetricsPrices;
 use App\Models\Inventory;
@@ -108,7 +109,7 @@ class PriceController extends Controller
                 'message' => 'Price metrics saved successfully.'
             ];
             return response()->json($response);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response = [
                 'error' => true,
                 'message' => 'Error saving price metrics.'
@@ -429,6 +430,12 @@ class PriceController extends Controller
 
             $invoice_note = Setting::where("type", "invoice_note")->first();
 
+            $company_name = SettingHelper::getSetting("company_name");
+            $company_contact = SettingHelper::getSetting("company_contact");
+            $company_address = SettingHelper::getSetting("company_address");
+            $company_email = SettingHelper::getSetting("company_email");
+            $company_logo = SettingHelper::getSetting("company_logo");
+
             $data = [
                 'clientName' => $clientName,
                 'clientAddress' => $clientAddress,
@@ -436,7 +443,12 @@ class PriceController extends Controller
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
                 'total' => $total,
-                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : ""
+                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : "",
+                'company_name' => $company_name->content,
+                'company_contact' => $company_contact->content,
+                'company_address' => $company_address->content,
+                'company_email' => $company_email->content,
+                'company_logo' => $company_logo->content,
             ];
 
             $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
@@ -475,6 +487,12 @@ class PriceController extends Controller
 
             $invoice_note = Setting::where("type", "invoice_note")->first();
 
+            $company_name = SettingHelper::getSetting("company_name");
+            $company_contact = SettingHelper::getSetting("company_contact");
+            $company_address = SettingHelper::getSetting("company_address");
+            $company_email = SettingHelper::getSetting("company_email");
+            $company_logo = SettingHelper::getSetting("company_logo");
+
             $data = [
                 'clientName' => $clientName,
                 'clientAddress' => $clientAddress,
@@ -482,13 +500,17 @@ class PriceController extends Controller
                 'invoiceNumber' => $invoiceNumber,
                 'totalResultHtml' => $totalResultHtml,
                 'total' => $total,
-                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : ""
+                "invoice_note" => !empty($invoice_note) ? $invoice_note->content : "",
+                'company_name' => $company_name->content,
+                'company_contact' => $company_contact->content,
+                'company_address' => $company_address->content,
+                'company_email' => $company_email->content,
+                'company_logo' =>public_path( $company_logo->content),
             ];
-
-            $pdf = PDF::loadView('pdf.price_calculation', $data)->setPaper('a4');
+            $pdf = PDF::loadView('pdf.price_calculation', data: $data)->setPaper('a4');
             return $pdf->stream();
         } catch (Exception $e) {
-
+            Log::info($e);
             return response()->json([
                 'error' => true,
                 'message' => 'An error occurred while generating the PDF.',

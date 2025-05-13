@@ -1,8 +1,16 @@
 toastr.options = {
     "closeButton": true,
     "progressBar": true,
-    "positionClass": "toast-bottom-right"
+    "positionClass": "toast-top-right",
+    "showDuration": "500",
+    "hideDuration": "100",
+    "timeOut": "3000",
+    "extendedTimeOut": "1000",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut",
 };
+
+
 
 function isValidSriLankanMobile(mobileNumber) {
     const sriLankanMobileRegex = /^(0|\+94)(7\d|11|2\d|3\d|4\d|5\d|6\d|81|91)\d{7}$/;
@@ -251,6 +259,47 @@ $('#settings-notes-form').submit(function(event) {
         },
         error: function(xhr, status, error) {
             console.log(error)
+            toastr.error('Error: ' + error);
+        }
+    });
+});
+
+$('#company-setting-update-form').submit(function (event) {
+    event.preventDefault();
+
+    var form = $(this);
+    var formData = new FormData(form[0]);
+
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (response.error === false) {
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "showDuration": "500",
+                    "hideDuration": "100",
+                   "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "onHidden": function () {
+                        location.reload();
+                    }
+                }
+                toastr.success(response.message);
+
+            } else {
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.error('Failed to update.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(error);
             toastr.error('Error: ' + error);
         }
     });

@@ -181,3 +181,12 @@
 .orderBtn, .dashboardBtn{
     margin-right: 15px;
 }
+
+.toast {
+    box-shadow: none !important;
+  opacity: 1 !important; 
+}
+
+.toast-message {
+  opacity: 1 !important;
+}

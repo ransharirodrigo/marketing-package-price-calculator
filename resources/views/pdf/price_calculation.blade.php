@@ -134,10 +134,16 @@
 <body>
     <div class="invoice-container">
         <div class="header">
-            <div class="logo">THE BUSINESS SOLUTIONS<br><small>(77) 760 7644</small></div>
+           
+            <div>
+                
+                @if($company_logo)
+                <img src="{{  $company_logo }}" alt="Company Logo" style="max-width: 90px; height: auto;">
+                @endif
+            </div> 
+            <div class="logo">{{ $company_name }}<br><small>{{ $company_contact }}</small></div>
             <div class="company-address">
-                4A, Kuda Edanda Road,<br>
-                Wattala 11300
+               {{ $company_address }}
             </div>
         </div>
 

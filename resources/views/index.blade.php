@@ -11,7 +11,7 @@
                     <div class="col-lg-4">
                         <div class="calculator-sidebar p-4 h-100">
                             <div class="d-flex align-items-center mb-4">
-                                <img src="{{ asset('images/logo.png') }}" class="agency-logo-for-navbar " style="width: 90px; height: 90px;">
+                                <img src="{{ asset('images/web-app-logo.png') }}" class="agency-logo-for-navbar " style="width: 90px; height: 90px;">
                                 <h1 class="common-heading text-white fs-4 mb-0">{{ __("main.package")." ".__("main.price") ." ".__("main.calculator") }}</h1>
                             </div>
                             <div class="sidebar-info">

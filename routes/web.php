@@ -66,3 +66,5 @@ Route::get("settings",[SettingsController::class,"index"])->name("settings.index
 Route::post('notes', [SettingsController::class,'notesStore'])->name('settings.notes.store');
 
 Route::get('/business/{businessId}/inventory/{inventoryId}/price', [PriceController::class, 'getPriceForSelectedInventory']);
+
+Route::post('settings/update', [SettingsController::class, 'companySettingUpdate'])->name('company.settings.update');
