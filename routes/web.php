@@ -68,3 +68,5 @@ Route::post('notes', [SettingsController::class,'notesStore'])->name('settings.n
 Route::get('/business/{businessId}/inventory/{inventoryId}/price', [PriceController::class, 'getPriceForSelectedInventory']);
 
 Route::post('settings/update', [SettingsController::class, 'companySettingUpdate'])->name('company.settings.update');
+
+Route::delete('price/{price_id}/delete', [PriceController::class, 'destroy'])->name('price.destroy');

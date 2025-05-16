@@ -133,7 +133,7 @@ class PriceController extends Controller
                 'inventory' => $price->inventory->name,
                 'metric' => $price->metrics->name,
                 'price' => $price->price,
-                "action" => "<i class='fas fa-edit price-metrics-edit-btn' data-id='" . $price->id . "' data-url='business-inventory-metric-prices/" . $price->id . "/edit' style='cursor: pointer;'></i>"
+                "action" => "<i class='fas fa-edit price-metrics-edit-btn' data-id='" . $price->id . "' data-url='business-inventory-metric-prices/" . $price->id . "/edit' style='cursor: pointer;'></i> <i class='fas fa-trash-alt delete-price-btn' data-id='" . $price->id . "' data-url='price/" . $price->id . "/delete' style='cursor: pointer; margin-left: 10px;'></i>"
             ];
             $index++;
         }
@@ -538,5 +538,26 @@ class PriceController extends Controller
             "price" => $result
         ];
         return response()->json($response);
+    }
+
+    public function destroy($id){
+        $priceRow = BusinessInventoryMetricsPrices::where('id', $id)->first();
+
+        if (!$priceRow) {
+            return response()->json(['message' => 'Record not found.'], 404);
+        }
+
+        $businessId = $priceRow->business_id;
+        $inventoryId = $priceRow->inventory_id;
+        $metricId = $priceRow->metrics_id;
+
+       InvoiceItems::where('business_id', $businessId)
+        ->where('inventory_id', $inventoryId)
+        ->where('metrics_id', $metricId)
+        ->delete();
+
+            BusinessInventoryMetricsPrices::where('id', $id)->delete();
+         
+            return response()->json(['success' => true, 'message' => 'Price Deleted Successfully.']);
     }
 }
