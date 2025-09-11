@@ -8,8 +8,10 @@ use App\Models\Inventory;
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\Metrics;
+use App\Services\OrderFilter\OrderFilterContext;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+
 
 class OrderController extends Controller
 {
@@ -26,19 +28,9 @@ class OrderController extends Controller
         if ($request->has('type') && $request->has('value')) {
             $type = $request->input('type');
             $value = $request->input('value');
-            if ($type === 'business') {
-                $orders->whereHas('invoiceItems', function ($q) use ($value) {
-                    $q->where('business_id', $value);
-                });
-            } elseif ($type === 'inventory') {
-                $orders->whereHas('invoiceItems', function ($q) use ($value) {
-                    $q->where('inventory_id', $value);
-                });
-            } elseif ($type === 'metrics') {
-                $orders->whereHas('invoiceItems', function ($q) use ($value) {
-                    $q->where('metrics_id', $value);
-                });
-            }
+
+            $orderFilterContext = new OrderFilterContext();
+            $orders =   $orderFilterContext->applyFilter($orders, $type, $value);
         }
 
         $orders = $orders->get();
@@ -50,10 +42,10 @@ class OrderController extends Controller
         foreach ($orders as $order) {
             $data[] = [
                 'no' => $index,
-                'customer_name' => ucwords( $order->name),
+                'customer_name' => ucwords($order->name),
                 'customer_mobile' => $order->mobile,
                 'customer_email' => $order->email,
-                'customer_address' => ucwords( $order->address),
+                'customer_address' => ucwords($order->address),
                 'invoice_number' => $order->invoice_number,
                 "action" => "<i class='fas fa-eye view-invoice-items-btn' data-id='" . $order->invoice_number . "' data-url='view-invoice-items/" . $order->invoice_number . "' style='cursor: pointer;'></i>"
             ];
@@ -64,7 +56,7 @@ class OrderController extends Controller
 
     public function viewInvoiceItems(string $invoiceNumber)
     {
-        $invoiceItems = InvoiceItems::with('inventory', 'metric','business')
+        $invoiceItems = InvoiceItems::with('inventory', 'metric', 'business')
             ->where('invoice_number', $invoiceNumber)
             ->get();
 
@@ -78,7 +70,7 @@ class OrderController extends Controller
             $lineTotal = is_numeric($rate) && is_numeric($item->qty) ? $rate * $item->qty : 'N/A';
 
             return [
-                'business'=>$item->business->name,
+                'business' => $item->business->name,
                 'description' => $item->inventory && $item->metric ? $item->inventory->name . ' - ' . $item->metric->name : (optional($item->inventory)->name ?? optional($item->metric)->name ?? 'N/A'),
                 'rate' => $rate,
                 'qty' => $item->qty,
@@ -89,8 +81,9 @@ class OrderController extends Controller
         return response()->json($invoiceItemsWithDetails);
     }
 
-    public function getSortValue(Request $request){
-      
+    public function getSortValue(Request $request)
+    {
+
         $sortType = $request->input('sortType');
 
         $values = [];
