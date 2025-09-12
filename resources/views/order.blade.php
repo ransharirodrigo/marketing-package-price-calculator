@@ -13,7 +13,7 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="sortType" class="form-label">{{ __('main.type') }}</label>
-                            <select class="form-select" id="sortType">
+                            <select class="form-select common-form-control" id="sortType">
                                 <option value="">{{ __('main.select') ." ".__('main.type') }}</option>
                                 <option value="business">{{ __('main.business') }}</option>
                                 <option value="inventory">{{ __('main.inventory') }}</option>
@@ -22,12 +22,12 @@
                         </div>
                         <div class="col-md-3">
                             <label for="sortValue" class="form-label">{{ __('main.value') }}</label>
-                            <select class="form-select" id="sortValue" disabled>
+                            <select class="form-select common-form-control" id="sortValue" disabled>
                                 <option value="">{{ __('main.select') ." ".__('main.value') }}</option>
                             </select>
                         </div>
                         <div class="col-md-3 d-flex align-items-end justify-content-start">
-                            <button class="btn common-coral-btn-bordered-small" id="applySort">{{ __('main.apply') }}</button>
+                            <button class="btn common-green-btn-bordered-small" id="applySort">{{ __('main.apply') }}</button>
                         </div>
                     </div>
                     <table id="order_table" data-url="{{ url("orders-list") }}" class="table table-bordered table-hover table-responsive">

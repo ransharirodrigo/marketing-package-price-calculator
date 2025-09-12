@@ -1,6 +1,6 @@
 <nav class="navbar navbar-container">
   <div class="container">
-    <a class="nabar-brand" href="">
+    <a class="nabar-brand" href="{{ route('index') }}">
       <img src="{{ asset('images/web-app-logo.png') }}" class="agency-logo-for-navbar " style="width: 90px; height: 90px;">
     </a>
     <div>
