@@ -4,6 +4,19 @@
 <head>
     <title>Proforma Invoice</title>
     <style>
+        :root {
+            --orange: #FFC371;
+            --dark-grey: #343A40;
+            --dark-grey-1: #2c3e50;
+            --medium-grey: #6C757D;
+            --light-grey: #f9f9f9;
+            --border-grey: #e1e1e1;
+            --white: #ffffff;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --green: #2ebf91;
+            --light-green: #71b280;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             /* margin: 10px; */
@@ -23,7 +36,7 @@
         }
 
         .header {
-            background-color: #FF5F6D;
+            background-color: var(--green);
             color: #fff;
             padding: 15px;
             border-radius: 8px 8px 0 0;
@@ -72,7 +85,7 @@
         .prepared-for strong,
         .account-details-section h3,
         .notes-section h3 {
-            color: #FF5F6D;
+            color: var(--green);
         }
 
         .items-table {
@@ -134,15 +147,15 @@
 <body>
     <div class="invoice-container">
         <div class="header">
-           
+
             <div>
                 @if($company_logo)
                 <img src="{{  $company_logo }}" alt="Company Logo" style="max-width: 90px; height: auto;">
                 @endif
-            </div> 
+            </div>
             <div class="logo">{{ $company_name }}<br><small>{{ $company_contact }}</small></div>
             <div class="company-address">
-               {{ $company_address }}
+                {{ $company_address }}
             </div>
         </div>
 
@@ -172,10 +185,10 @@
 
         <div class="account-details-section">
             <h3 class="section-title">Account Details:</h3>
-            <p>ACCOUNT NAME : THE BUSINESS SOLUTIONS</p>
-            <p>ACCOUNT NUMBER:1000683057</p>
+            <p>ACCOUNT NAME : ELAVATE</p>
+            <p>ACCOUNT NUMBER:1850483257</p>
             <p>BANK : COMMERCIAL BANK</p>
-            <p>BRANCH : WATTALA</p>
+            <p>BRANCH : COLOMBO</p>
         </div>
 
         @if (!empty($invoice_note))

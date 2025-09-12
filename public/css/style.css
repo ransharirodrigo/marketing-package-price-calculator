@@ -1,83 +1,88 @@
 :root {
-    --coral: #FF5F6D;
-    --coral-dark: #ff4b5a;
     --orange: #FFC371;
     --dark-grey: #343A40;
-    --dark-grey-1:#2c3e50;
+    --dark-grey-1: #2c3e50;
     --medium-grey: #6C757D;
     --light-grey: #f9f9f9;
     --border-grey: #e1e1e1;
     --white: #ffffff;
     --shadow-light: rgba(0, 0, 0, 0.1);
-    --shadow-coral: rgba(255, 95, 109, 0.25);
+    --green: #2ebf91;
+    --light-green: #71b280;
+    --glow-green:rgba(0, 128, 0, 0.25);
 }
 
 /* .common-heading {
-    font-weight: 700;
+
+    font-weight: 700; 
     font-size: 30px;
 } */
 
 .common-gradient {
-    background: linear-gradient(90deg, var(--coral), var(--orange));
+    background: linear-gradient(90deg, var(--light-green), var(--green));
 }
 
-.common-gradient-btn-small, .common-gradient-btn{
-    background: linear-gradient(90deg, var(--coral), var(--orange));
+.common-gradient-btn-small,
+.common-gradient-btn {
+    background: linear-gradient(90deg, var(--light-green), var(--green));
     border: none;
     color: var(--white);
     font-weight: 600;
     border-radius: 6px;
-    box-shadow: 0 4px 15px var(--shadow-coral);
+    box-shadow: 0 4px 15px var(--light-green);
     transition: all 0.3s;
-} 
+}
 
 .common-gradient-btn {
     padding: 12px 24px;
 }
 
-.common-gradient-btn:hover, .common-gradient-btn-small:hover {
+.common-gradient-btn:hover,
+.common-gradient-btn-small:hover {
     color: var(--white) !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px var(--shadow-coral);
+    box-shadow: 0 6px 18px var(--light-green);
 }
 
-.common-coral-btn{
-    background-color: var(--coral);
+.common-green-btn {
+    background-color: var(--green);
     color: white;
     border: none;
     padding: 10px 20px;
     transition: all 0.3s;
 }
 
-.common-coral-btn:hover {
-    background-color: var(--coral-dark);
+.common-green-btn:hover {
+    background-color: var(--green);
     color: white;
 }
 
-.common-coral-btn:active {
-    background-color: var(--coral-dark) !important;
+.common-green-btn:active {
+    background-color: var(--green) !important;
     color: white !important;
 }
 
-.common-coral-btn-bordered-small, .common-coral-btn-bordered{
-    border:1px, solid, var(--coral) ;    
-    color:  var(--coral);
+.common-green-btn-bordered-small,
+.common-green-btn-bordered {
+    border: 1px, solid, var(--green);
+    color: var(--green);
     transition: all 0.3s;
 }
 
-.common-coral-btn-bordered{
+.common-green-btn-bordered {
     padding: 10px 20px;
 }
 
-.common-coral-btn-bordered:hover , .common-coral-btn-bordered-small:hover{
-    border:1px, solid, var(--coral-dark) !important;    
-    color:  var(--coral) !important;
+.common-green-btn-bordered:hover,
+.common-green-btn-bordered-small:hover {
+    border: 1px, solid, var(--green) !important;
+    color: var(--green) !important;
     transform: translateY(-2px);
 }
 
-.common-coral-btn-bordered:active{
-    border:1px, solid, var(--coral-dark) !important;    
-    color:  var(--coral) !important;
+.common-green-btn-bordered:active {
+    border: 1px, solid, var(--green) !important;
+    color: var(--green) !important;
 }
 
 .common-heading {
@@ -108,7 +113,7 @@
     font-size: 0.9rem;
 }
 
-.common-text-2-light-grey{
+.common-text-2-light-grey {
     font-size: 0.8rem;
     opacity: 0.8;
 }
@@ -124,8 +129,8 @@
 
 .common-form-control:focus {
     outline: none;
-    border-color: var(--coral);
-    box-shadow: 0 0 0 3px rgba(255, 95, 109, 0.1);
+    border-color: var(--green);
+    box-shadow: none;
     background-color: var(--white);
 }
 
@@ -138,7 +143,27 @@
 }
 
 .common-checkbox {
-    accent-color: var(--coral);
+    accent-color: var(--green);
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-grey);
+    border-radius: 4px; 
+    background-color: var(--light-grey);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-check-input:checked {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.form-check-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--glow-green); 
 }
 
 .agency-logo {
@@ -146,24 +171,26 @@
     height: 60px;
 }
 
-.agency-logo-for-navbar{
+.agency-logo-for-navbar {
     width: 30px;
     height: 30px;
 }
 
-.login-container{
+.login-container {
     height: 100%;
 }
 
-.icon-div{
+.icon-div {
     background-color: var(--dark-grey-1);
 }
 
 .calculator-sidebar {
-    background-color: var(--dark-grey-1);
+    /* background-color: var(--dark-grey-1); */
+    background-color: #0d0048;
     color: white;
     height: 100%;
 }
+
 .calculator-page {
     overflow: hidden;
 }
@@ -173,32 +200,34 @@
     height: 32px;
 }
 
-.navbar-container{
+.navbar-container {
     background-color: var(--dark-grey-1);
     /* padding-top: 15px;
     padding-bottom: 15px; */
 }
-.orderBtn, .dashboardBtn{
+
+.orderBtn,
+.dashboardBtn {
     margin-right: 15px;
 }
 
 .toast {
     box-shadow: none !important;
-  opacity: 1 !important; 
+    opacity: 1 !important;
 }
 
 .toast-message {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 .toast-middle-center {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin-top: 0 !important; 
+    margin-top: 0 !important;
 }
 
 .toast-warning {
-    background-color: var(--orange)!important;
-    color: rgb(73, 69, 69); 
+    background-color: var(--orange) !important;
+    color: rgb(73, 69, 69);
 }

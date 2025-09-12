@@ -22,7 +22,7 @@ Route::get('/', function () {
     $metrics=Metrics::get();
 
     return view('index', compact('business', 'inventory','metrics'));
-});
+})->name("index");
 
 Route::get("/login", [LoginController::class, "index"])->name("login");
 Route::post("/login", [LoginController::class, "adminLogin"])->name("admin.login");

@@ -8,14 +8,14 @@
                 @include("layouts.navbar")
             </div>
 
-            <div class="row mt-4">
+            <div class="row mt-4 pb-5">
                 <div class="col-12 col-xl-6 ">
                     <h3 class="common-heading">{{__('main.business')." ".__('main.type')." ".__('main.management')}}</h3>
 
                     <div class="row ms-1">
                         <div class="col-6 col-sm-4 col-lg-2">
                             <div class="row">
-                                <button class="btn common-coral-btn-bordered-small" id="addBusiness"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
+                                <button class="btn common-green-btn-bordered-small" id="addBusiness"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="row ms-1">
                         <div class="col-6 col-sm-4 col-lg-2">
                             <div class="row">
-                                <button class="btn common-coral-btn-bordered-small" id="addInventory"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
+                                <button class="btn common-green-btn-bordered-small" id="addInventory"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
                             </div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                     <div class="row ms-1">
                         <div class="col-6 col-sm-4 col-lg-2">
                             <div class="row">
-                                <button class="btn common-coral-btn-bordered-small" id="addPriceMetrics"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
+                                <button class="btn common-green-btn-bordered-small" id="addPriceMetrics"><i class="fa-solid fa-plus"></i> {{__('main.add')}}</button>
                             </div>
                         </div>
                     </div>
@@ -99,12 +99,12 @@
                     @csrf
                     <div class="form-group">
                         <label for="businessName">{{ __('main.business_name') }}</label>
-                        <input type="text" class="form-control common-form-control" id="businessName" name="businessName" placeholder="{{ __('main.enter_business_name') }}" value="">
+                        <input type="text" class="form-control common-form-control" id="businessName" name="businessName" placeholder="{{ __('main.enter_business_name') }}" value="" autocomplete="off">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" id="closeBusinessModal" data-dismiss="modal">{{ __('main.close') }}</button>
+                <button type="button" class="btn common-green-btn-bordered-small" id="closeBusinessModal" data-dismiss="modal">{{ __('main.close') }}</button>
                 <button type="button" class="btn common-gradient-btn-small" id="saveBusiness">{{ __('main.save') }}</button>
             </div>
         </div>
@@ -139,13 +139,13 @@
                     @foreach ($metrics as $metric)
                     <div class="form-group mt-3">
                         <label>{{ $metric->name }}</label>
-                        <input type="text" class="form-control common-form-control" id="{{ $metric->name }}" name="{{ $metric->name }}" placeholder="{{ $metric->name." ".__('main.price') }}" oninput="validateDoubleValues(this)">
+                        <input type="text" class="form-control common-form-control" id="{{ $metric->name }}" name="{{ $metric->name }}" placeholder="{{ $metric->name." ".__('main.price') }}" oninput="validateDoubleValues(this)"  autocomplete="off">
                     </div>
                     @endforeach
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" id="closePriceMetricsModal" data-dismiss="modal">{{ __('main.close') }}</button>
+                <button type="button" class="btn common-green-btn-bordered-small" id="closePriceMetricsModal" data-dismiss="modal">{{ __('main.close') }}</button>
                 <button type="button" class="btn common-gradient-btn-small" id="savePriceMetrics">{{ __('main.save') }}</button>
             </div>
         </div>
@@ -163,12 +163,12 @@
                     @csrf
                     <div class="form-group">
                         <label for="name">{{ __('main.inventory')." ".__('main.name') }}</label>
-                        <input type="text" class="form-control common-form-control" id="inventoryName" name="inventoryName" placeholder="{{ __('main.enter_inventory_name') }}" value="">
+                        <input type="text" class="form-control common-form-control" id="inventoryName" name="inventoryName" placeholder="{{ __('main.enter_inventory_name') }}" value=""  autocomplete="off">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" id="closeInventoryModal" data-dismiss="modal">{{ __('main.close') }}</button>
+                <button type="button" class="btn common-green-btn-bordered-small" id="closeInventoryModal" data-dismiss="modal">{{ __('main.close') }}</button>
                 <button type="button" class="btn common-gradient-btn-small" id="saveInventory">{{ __('main.save') }}</button>
             </div>
         </div>
@@ -213,7 +213,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-green-btn-bordered-small" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn common-gradient-btn-small" id="update_price_metrics">Save changes</button>
             </div>
         </div>
@@ -240,7 +240,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-green-btn-bordered-small" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn common-gradient-btn-small" id="updateBusinessSubmit">Save changes</button>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn common-coral-btn-bordered-small" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn common-green-btn-bordered-small" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn common-gradient-btn-small" id="updateInventorySubmit">Save changes</button>
             </div>
         </div>
