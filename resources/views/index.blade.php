@@ -62,7 +62,7 @@
                         <div class="calculator-sidebar p-4 h-100">
                             <div class="d-flex align-items-center mb-4">
                                 <img src="{{ asset('images/web-app-logo.png') }}" class="agency-logo-for-navbar " style="width: 60px; height: 60px;">
-                                <h1 class="common-heading text-white fs-4 mb-0 ms-3">{{ __("main.package")." ".__("main.price") ." ".__("main.calculator") }}</h1>
+                                <!-- <h1 class="common-heading text-white fs-4 mb-0 ms-3">{{ __("main.package")." ".__("main.price") ." ".__("main.calculator") }}</h1> -->
                             </div>
                             <div class="sidebar-info">
                                 <div class="common-text-2-light-grey mt-4">
