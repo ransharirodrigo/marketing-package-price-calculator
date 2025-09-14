@@ -20,8 +20,8 @@
                         </div>
                     </div>
 
-                    <div class="row px-3 mt-5">
-                        <table id="business_type_table" data-url="{{ url("business-list") }}" class="table table-bordered table-hover table-responsive">
+                    <div class="row px-3 mt-5 table-responsive">
+                        <table id="business_type_table" data-url="{{ url("business-list") }}" class="table table-bordered table-hover w-100">
                             <thead>
                                 <tr>
                                     <th scope="col">{{__("main.no")}}</th>
@@ -43,8 +43,8 @@
                         </div>
                     </div>
 
-                    <div class="row px-3 mt-5">
-                        <table id="inventory_table" data-url="{{ url("inventory-list") }}" class="table table-bordered table-hover table-responsive">
+                    <div class="row px-3 mt-5 table-responsive">
+                        <table id="inventory_table" data-url="{{ url("inventory-list") }}" class="table table-bordered table-hover w-100">
                             <thead>
                                 <tr>
                                     <th scope="col">{{__("main.no")}}</th>
@@ -67,8 +67,8 @@
                         </div>
                     </div>
 
-                    <div class="row px-3 mt-5">
-                        <table id="price_metric_table" data-url="{{ url("price-list") }}" class="table table-bordered table-hover table-responsive">
+                    <div class="row px-3 mt-5 table-responsive">
+                        <table id="price_metric_table" data-url="{{ url("price-list") }}" class="table table-bordered table-hover w-100">
                             <thead>
                                 <tr>
                                     <th scope="col">{{__("main.no")}}</th>

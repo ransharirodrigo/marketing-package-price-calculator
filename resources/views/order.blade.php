@@ -30,19 +30,22 @@
                             <button class="btn common-green-btn-bordered-small" id="applySort">{{ __('main.apply') }}</button>
                         </div>
                     </div>
-                    <table id="order_table" data-url="{{ url("orders-list") }}" class="table table-bordered table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{__("main.no")}}</th>
-                                <th scope="col">{{__("main.customer") ." ".__("main.name") }}</th>
-                                <th scope="col">{{__("main.customer")." ".__("main.mobile")}}</th>
-                                <th scope="col">{{__("main.customer")." ".__("main.email")}}</th>
-                                <th scope="col">{{__("main.customer")." ".__("main.address")}}</th>
-                                <th scope="col">{{__("main.proforma")." ".__("main.invoice")." ".__("main.number")}}</th>
-                                <th scope="col">{{__("main.action")}}</th>
-                            </tr>
-                        </thead>
-                    </table>
+                    <div class="table-responsive">
+                        <table id="order_table" data-url="{{ url("orders-list") }}" class="table table-bordered table-hover w-100">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{__("main.no")}}</th>
+                                    <th scope="col">{{__("main.customer") ." ".__("main.name") }}</th>
+                                    <th scope="col">{{__("main.customer")." ".__("main.mobile")}}</th>
+                                    <th scope="col">{{__("main.customer")." ".__("main.email")}}</th>
+                                    <th scope="col">{{__("main.customer")." ".__("main.address")}}</th>
+                                    <th scope="col">{{__("main.proforma")." ".__("main.invoice")." ".__("main.number")}}</th>
+                                    <th scope="col">{{__("main.action")}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
                 </div>
             </div>
 
@@ -56,7 +59,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="invoiceItemModalLabel">Invoice Items</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               
+
             </div>
             <div class="modal-body">
                 <h5 id="business_name"></h5>
