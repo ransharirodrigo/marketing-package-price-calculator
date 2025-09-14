@@ -113,24 +113,24 @@ class SettingsController extends Controller
       if ($request->has('email')) {
         SettingHelper::updateSetting('company_email', $request->email);
       }
-$filename="";
+      $filename = "";
       if ($request->hasFile('logo')) {
         $old_logo_data_row = SettingHelper::getSetting("company_logo");
 
         $logo = $request->file('logo');
         $filename = 'logo.' . $logo->getClientOriginalExtension();
         $path = 'images/' . $filename;
+
+        SettingHelper::updateSetting('company_logo', $path);
+        StorageHelper::deleteLocalImage($old_logo_data_row->content);
+
         $moved = $logo->move("images/",  $filename);
-        if ($moved) {
-          SettingHelper::updateSetting('company_logo', $path);
-          StorageHelper::deleteLocalImage($old_logo_data_row->content);
-        }
       }
 
       $response = [
         'error' => false,
         'message' => 'Company Settings Updated Successfully',
-        "updatedLogoName" => $filename?  asset($filename):""
+        "updatedLogoName" => $filename ?  asset($filename) : ""
       ];
       return response()->json($response);
     } catch (Exception $e) {

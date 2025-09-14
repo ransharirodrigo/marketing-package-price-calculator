@@ -56,9 +56,9 @@ $("#saveBusiness").on("click", function (event) {
                     "extendedTimeOut": "1000",
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut",
-                    "onHidden": function () {
-                        location.reload();
-                    }
+                    // "onHidden": function () {
+                    //     location.reload();
+                    // }
                 }
                 toastr.success(response.message, "Success");
                 modalClose(addBusinessModal);
@@ -98,10 +98,10 @@ $(document).on('click', '.edit-business-btn', function () {
 
 $(document).on('click', '.delete-btn', function () {
     let businessId = $(this).data('id');
-    let deleteUrl = $(this).data('url'); 
+    let deleteUrl = $(this).data('url');
 
     toastr.warning(
-         `<div class="d-flex flex-column align-items-center">
+        `<div class="d-flex flex-column align-items-center">
             <p class="mb-2">Are you sure you want to delete this?</p>
             <div>
                 <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger me-2">Delete</button>
@@ -119,7 +119,7 @@ $(document).on('click', '.delete-btn', function () {
             preventDuplicates: true,
             onShown: function (toast) {
                 $("#confirmDeleteBtn").on('click', function () {
-                   $.ajax({
+                    $.ajax({
                         url: deleteUrl,
                         type: 'DELETE',
                         headers: {
@@ -173,7 +173,7 @@ $(document).on('click', '#updateBusinessSubmit', function () {
             toastr.success(response.message, "Success");
             window.businessTypeTable.ajax.reload(null, false);
             window.pricetable.ajax.reload(null, false);
-        
+
             $('#business_id option[value="' + businessId + '"]').text(response.name);
         },
         error: function (error) {
@@ -202,6 +202,9 @@ $("#savePriceMetrics").on("click", function (event) {
         url: 'save-new-price-metrics',
         type: 'POST',
         data: $('#addPriceMetricsForm').serialize(),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         success: function (response) {
 
             if (response.error) {
@@ -281,7 +284,7 @@ $(document).on('click', '.view-invoice-items-btn', function () {
     let modalTitle = $('#invoiceItemModalLabel');
     let business_name = $('#business_name');
 
-    container.empty(); 
+    container.empty();
     modalTitle.text(`Invoice Items for Invoice: ${invoiceNumber}`);
 
     $.ajax({
@@ -300,7 +303,7 @@ $(document).on('click', '.view-invoice-items-btn', function () {
 
                 $.each(data, function (index, item) {
                     tableHtml += `<tr><td>${item.description}</td><td>${item.rate}</td><td>${item.qty}</td><td>${item.line_total}</td></tr>`;
-                    total += parseFloat(item.line_total); 
+                    total += parseFloat(item.line_total);
                 });
 
                 tableHtml += '</tbody></table>';
@@ -333,7 +336,7 @@ $("#closeInventoryModal").on("click", function () {
 
 $("#saveInventory").on("click", function (event) {
     event.preventDefault();
-    
+
     $.ajax({
         url: 'save-new-inventory',
         type: 'POST',
@@ -360,14 +363,14 @@ $("#saveInventory").on("click", function (event) {
 $(document).on('click', '.edit-inventory-btn', function () {
     let inventoryId = $(this).data('id');
     let url = $(this).data('url');
-    
+
     $.ajax({
         url: url,
         type: 'GET',
         success: function (response) {
             $('#updateInventoryModal input[name="id"]').val(response.id);
             $('#updateInventoryModal input[name="updatedInventoryName"]').val(response.name);
-            
+
             $('#updateInventoryModal').modal('show');
         },
         error: function (error) {
@@ -381,7 +384,7 @@ $(document).on('click', '#updateInventorySubmit', function () {
     let formData = $('#updateInventoryForm').serialize();
     let inventoryId = $('#updateInventoryModal input[name="id"]').val();
     let url = 'inventories/' + inventoryId;
-    
+
     $.ajax({
         url: url,
         type: 'PUT',
@@ -394,7 +397,7 @@ $(document).on('click', '#updateInventorySubmit', function () {
             toastr.success(response.message, "Success");
             window.tableInventory.ajax.reload(null, false);
             window.pricetable.ajax.reload(null, false);
-            
+
         },
         error: function (error) {
             console.error('Error updating inventory data:', error);
@@ -409,7 +412,7 @@ $(document).on('click', '.delete-inventory-btn', function () {
     let deleteUrl = $(this).data('url');
 
     toastr.warning(
-         `<div class="d-flex flex-column align-items-center">
+        `<div class="d-flex flex-column align-items-center">
             <p class="mb-2">Are you sure you want to delete this?</p>
             <div>
                 <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger me-2">Delete</button>
@@ -467,7 +470,7 @@ $(document).on('click', '.delete-price-btn', function () {
     let deleteUrl = $(this).data('url');
 
     toastr.warning(
-         `<div class="d-flex flex-column align-items-center">
+        `<div class="d-flex flex-column align-items-center">
             <p class="mb-2">Are you sure you want to delete this?</p>
             <div>
                 <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger me-2">Delete</button>
